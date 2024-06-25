@@ -28,7 +28,8 @@
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
     <RemoteDebugMachine />
     <StartAction>Project</StartAction>
-    <StartArguments>PD4</StartArguments>
+    <StartArguments>
+    </StartArguments>
     <StartPage />
     <StartProgram />
     <StartURL />

@@ -21,7 +21,6 @@ Public Class frmVoucher
         Me.arrControlButtons = New Button(13 - 1) {}
         'Me.oTitleButton = New TitleButton(Me)
         Me.lAllowCurrentCellChanged = True
-        Me.xInventory = New clsInventory
         Me.InitializeComponent()
     End Sub
 
@@ -58,7 +57,6 @@ Public Class frmVoucher
         Me.InitFlowHandling(Me.cboAction)
         Me.EDStatus()
         Me.oSecurity.SetReadOnly()
-        Me.oSite.Key = ("ma_dvcs = '" & Strings.Trim(Me.txtMa_dvcs.Text) & "'")
     End Sub
 
     Private Sub AfterUpdateVc(ByVal lcIDNumber As String, ByVal lcAction As String)
@@ -185,7 +183,7 @@ Public Class frmVoucher
             If (ObjectType.ObjTst(modVoucher.oVar.Item("m_pack_yn"), 0, False) = 0) Then
                 str4 = ((String.Concat(New String() {str4, ChrW(13), "UPDATE ", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), " SET Status = '*'"}) & ", datetime2 = GETDATE(), user_id2 = " & StringType.FromObject(Reg.GetRegistryKey("CurrUserId"))) & "  WHERE " & cKey)
             End If
-            Me.BeforUpdateVc(lcIDNumber, "Del")
+            'Me.BeforUpdateVc(lcIDNumber, "Del")
             Sql.SQLExecute((modVoucher.appConn), str4)
             Me.pnContent.Text = ""
         End If
@@ -240,7 +238,6 @@ Public Class frmVoucher
             Me.cmdSave.Enabled = False
         End If
         Me.EDTrans()
-        Me.oSite.Key = ("ma_dvcs = '" & Strings.Trim(Me.txtMa_dvcs.Text) & "'")
     End Sub
 
     Private Sub EDStatus()
@@ -278,8 +275,8 @@ Public Class frmVoucher
         Loop While (index < MaxColumns)
         Try
             Me.colTen_vt.TextBox.Enabled = False
-            Me.colSo_px.TextBox.Enabled = False
-            Me.colSi_line.TextBox.Enabled = False
+            Me.colSo_PK.TextBox.Enabled = False
+            Me.colPK_line.TextBox.Enabled = False
         Catch exception1 As Exception
             ProjectData.SetProjectError(exception1)
             ProjectData.ClearProjectError()
@@ -363,7 +360,7 @@ Public Class frmVoucher
         End If
         modVoucher.tblMaster.Table = modVoucher.dsMain.Tables.Item(modVoucher.alMaster)
         modVoucher.tblDetail.Table = modVoucher.dsMain.Tables.Item(modVoucher.alDetail)
-        Fill2Grid.Fill(modVoucher.sysConn, tblDetail, (grdDetail), (modVoucher.tbsDetail), (modVoucher.tbcDetail), "DX4Detail")
+        Fill2Grid.Fill(modVoucher.sysConn, tblDetail, (grdDetail), (modVoucher.tbsDetail), (modVoucher.tbcDetail), "PD4Detail")
         oVoucher.SetMaxlengthItem(Me.grdDetail, modVoucher.alDetail, modVoucher.sysConn)
         Me.grdDetail.dvGrid = modVoucher.tblDetail
         Me.grdDetail.cFieldKey = "ma_vt"
@@ -371,34 +368,27 @@ Public Class frmVoucher
         Me.grdDetail.TableStyles.Item(0).AllowSorting = False
         Me.colMa_vt = GetColumn(Me.grdDetail, "ma_vt")
         Me.colDvt = GetColumn(Me.grdDetail, "Dvt")
-        Me.colMa_kho = GetColumn(Me.grdDetail, "ma_kho")
-        Me.colMa_vi_tri = GetColumn(Me.grdDetail, "ma_vi_tri")
         Me.colMa_lo = GetColumn(Me.grdDetail, "ma_lo")
         Me.colSo_luong = GetColumn(Me.grdDetail, "so_luong")
         Me.colTen_vt = GetColumn(Me.grdDetail, "ten_vt")
-        Me.colSo_px = GetColumn(Me.grdDetail, "so_px")
-        Me.colSi_line = GetColumn(Me.grdDetail, "si_line")
+        Me.colSo_PK = GetColumn(Me.grdDetail, "so_pk")
+        Me.colPK_line = GetColumn(Me.grdDetail, "pk_line")
         Dim str As String = Strings.Trim(StringType.FromObject(Sql.GetValue((modVoucher.sysConn), "voucherinfo", "keyaccount", ("ma_ct = '" & modVoucher.VoucherCode & "'"))))
         Dim sKey As String = Strings.Trim(StringType.FromObject(Sql.GetValue((modVoucher.sysConn), "voucherinfo", "keycust", ("ma_ct = '" & modVoucher.VoucherCode & "'"))))
-        Me.oSite = New VoucherKeyLibObj(Me.colMa_kho, "ten_kho", modVoucher.sysConn, modVoucher.appConn, "dmkho", "ma_kho", "ten_kho", "Site", ("ma_dvcs = '" & Strings.Trim(StringType.FromObject(Reg.GetRegistryKey("DFUnit"))) & "'"), modVoucher.tblDetail, Me.pnContent, False, Me.cmdEdit)
         Me.oUOM = New VoucherKeyCheckLibObj(Me.colDvt, "ten_dvt", modVoucher.sysConn, modVoucher.appConn, "vdmvtqddvt", "dvt", "ten_dvt", "UOMItem", "1=1", modVoucher.tblDetail, Me.pnContent, True, Me.cmdEdit)
         Me.oUOM.Cancel = True
         Me.colDvt.TextBox.CharacterCasing = CharacterCasing.Normal
-        AddHandler Me.colMa_kho.TextBox.Enter, New EventHandler(AddressOf Me.WhenSiteEnter)
-        AddHandler Me.colMa_kho.TextBox.Validated, New EventHandler(AddressOf Me.WhenSiteLeave)
         AddHandler Me.colDvt.TextBox.Move, New EventHandler(AddressOf Me.WhenUOMEnter)
         AddHandler Me.colDvt.TextBox.Validated, New EventHandler(AddressOf Me.WhenUOMLeave)
         Dim monumber As New monumber(GetColumn(Me.grdDetail, "so_lsx"))
         Dim oCustomer As New DirLib(Me.txtMa_kh, Me.lblTen_kh, modVoucher.sysConn, modVoucher.appConn, "dmkh", "ma_kh", "ten_kh", "Customer", sKey, False, Me.cmdEdit)
         AddHandler Me.txtMa_kh.Validated, New EventHandler(AddressOf Me.txtMa_kh_valid)
-        Dim clscustomerref As New clscustomerref(modVoucher.appConn, Me.txtMa_kh, Me.txtFnote1, modVoucher.VoucherCode, Me.oVoucher)
+        Dim clscustomerref As New clscustomerref(modVoucher.appConn, Me.txtMa_kh, Me.txtFcode3, modVoucher.VoucherCode, Me.oVoucher)
         Me.oInvItemDetail = New VoucherLibObj(Me.colMa_vt, "ten_vt", modVoucher.sysConn, modVoucher.appConn, "dmvt", "ma_vt", "ten_vt", "Item", "1=1", modVoucher.tblDetail, Me.pnContent, True, Me.cmdEdit)
         VoucherLibObj.oClassMsg = oVoucher.oClassMsg
         Me.oInvItemDetail.Colkey = True
         VoucherLibObj.dvDetail = modVoucher.tblDetail
-        Me.oLocation = New VoucherKeyLibObj(Me.colMa_vi_tri, "ten_vi_tri", modVoucher.sysConn, modVoucher.appConn, "dmvitri", "ma_vi_tri", "ten_vi_tri", "Location", "1=1", modVoucher.tblDetail, Me.pnContent, True, Me.cmdEdit)
         Me.oLot = New VoucherKeyLibObj(Me.colMa_lo, "ten_lo", modVoucher.sysConn, modVoucher.appConn, "dmlo", "ma_lo", "ten_lo", "Lot", "1=1", modVoucher.tblDetail, Me.pnContent, True, Me.cmdEdit)
-        AddHandler Me.colMa_vi_tri.TextBox.Move, New EventHandler(AddressOf Me.WhenLocationEnter)
         AddHandler Me.colMa_lo.TextBox.Move, New EventHandler(AddressOf Me.WhenLotEnter)
         AddHandler Me.colMa_vt.TextBox.Enter, New EventHandler(AddressOf Me.SetEmptyColKey)
         AddHandler Me.colMa_vt.TextBox.Validated, New EventHandler(AddressOf Me.WhenItemLeave)
@@ -409,8 +399,8 @@ Public Class frmVoucher
             ProjectData.ClearProjectError()
         End Try
         Me.colTen_vt.TextBox.Enabled = False
-        Me.colSo_px.TextBox.Enabled = False
-        Me.colSi_line.TextBox.Enabled = False
+        Me.colSo_PK.TextBox.Enabled = False
+        Me.colPK_line.TextBox.Enabled = False
         oVoucher.HideFields(Me.grdDetail)
         ChangeFormatColumn(Me.colSo_luong, StringType.FromObject(modVoucher.oVar.Item("m_ip_sl")))
         AddHandler Me.colSo_luong.TextBox.Leave, New EventHandler(AddressOf Me.txtSo_luong_valid)
@@ -452,10 +442,7 @@ Public Class frmVoucher
         menu.MenuItems.Add(item2)
         Dim menu2 As New ContextMenu
         Dim item4 As New MenuItem(StringType.FromObject(modVoucher.oLan.Item("006")), New EventHandler(AddressOf Me.RetrieveItems), Shortcut.F5)
-        Dim item3 As New MenuItem(StringType.FromObject(modVoucher.oLan.Item("004")), New EventHandler(AddressOf Me.RetrieveItems), Shortcut.F6)
         menu2.MenuItems.Add(item4)
-        menu2.MenuItems.Add(New MenuItem("-"))
-        menu2.MenuItems.Add(item3)
         Me.ContextMenu = menu2
         Me.txtKeyPress.Left = (-100 - Me.txtKeyPress.Width)
         Me.grdDetail.ContextMenu = menu
@@ -468,7 +455,7 @@ Public Class frmVoucher
         Me.oSecurity.oVoucher = Me.oVoucher
         Me.oSecurity.cboAction = Me.cboAction
         Me.oSecurity.cboStatus = Me.cboStatus
-        Me.oSecurity.cTotalField = "t_tt, t_tt_nt"
+        Me.oSecurity.cTotalField = "t_so_luong"
         Dim aGrid As Collection = Me.oSecurity.aGrid
         aGrid.Add(Me, "Form", Nothing, Nothing)
         aGrid.Add(Me.grdHeader, "grdHeader", Nothing, Nothing)
@@ -477,7 +464,6 @@ Public Class frmVoucher
         Me.oSecurity.Init()
         Me.oSecurity.Invisible()
         Me.oSecurity.SetReadOnly()
-        Me.InitInventory()
     End Sub
 
     Private Function GetIDItem(ByVal tblItem As DataView, ByVal sStart As String) As String
@@ -485,12 +471,12 @@ Public Class frmVoucher
         Dim num2 As Integer = (tblItem.Count - 1)
         Dim i As Integer = 0
         Do While (i <= num2)
-            If (Not Information.IsDBNull(RuntimeHelpers.GetObjectValue(tblItem.Item(i).Item("stt_rec0"))) AndAlso (ObjectType.ObjTst(tblItem.Item(i).Item("stt_rec0"), str2, False) > 0)) Then
+            If (Not Information.IsDBNull(RuntimeHelpers.GetObjectValue(tblItem.Item(i).Item("stt_rec0"))) AndAlso CInt(tblItem.Item(i).Item("stt_rec0")) > CInt(str2)) Then
                 str2 = StringType.FromObject(tblItem.Item(i).Item("stt_rec0"))
             End If
             i += 1
         Loop
-        Return Strings.Format(CInt(Math.Round(CDbl((DoubleType.FromString(str2) + 1)))), "000")
+        Return Strings.Format(CInt(Math.Round(CDbl((DoubleType.FromString(str2) + 1)))), "0000")
     End Function
 
     Public Sub GoRecno(ByVal cRecno As Object)
@@ -529,18 +515,10 @@ Public Class frmVoucher
         Dim str2 As String = grdDetail.TableStyles.Item(0).GridColumnStyles.Item(columnNumber).MappingName.ToUpper.ToString
         Dim cOldSite As Object
         Select Case str2
-            Case "MA_KHO"
-                cOldSite = Me.cOldSite
-                SetOldValue((cOldSite), oValue)
-                Me.cOldSite = StringType.FromObject(cOldSite)
             Case "SO_LUONG"
                 cOldSite = Me.noldSo_luong
                 SetOldValue((cOldSite), oValue)
                 Me.noldSo_luong = DecimalType.FromObject(cOldSite)
-            Case "LOAI_VC"
-                cOldSite = Me.cOldTransportType
-                SetOldValue((cOldSite), oValue)
-                Me.cOldTransportType = StringType.FromObject(cOldSite)
         End Select
     End Sub
 
@@ -628,10 +606,14 @@ Public Class frmVoucher
         Me.lblDien_giai = New System.Windows.Forms.Label()
         Me.txtT_so_luong = New libscontrol.txtNumeric()
         Me.txtLoai_ct = New System.Windows.Forms.TextBox()
-        Me.txtFnote1 = New System.Windows.Forms.TextBox()
+        Me.txtFcode3 = New System.Windows.Forms.TextBox()
         Me.lblOng_ba = New System.Windows.Forms.Label()
-        Me.txtNgay_lo = New libscontrol.txtDate()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtSo_lo = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtFcode1 = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.txtFcode2 = New System.Windows.Forms.TextBox()
         Me.tbDetail.SuspendLayout()
         Me.tpgDetail.SuspendLayout()
         CType(Me.grdDetail, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -641,9 +623,9 @@ Public Class frmVoucher
         '
         Me.cmdSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdSave.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdSave.Location = New System.Drawing.Point(2, 428)
+        Me.cmdSave.Location = New System.Drawing.Point(2, 493)
         Me.cmdSave.Name = "cmdSave"
-        Me.cmdSave.Size = New System.Drawing.Size(60, 23)
+        Me.cmdSave.Size = New System.Drawing.Size(72, 26)
         Me.cmdSave.TabIndex = 12
         Me.cmdSave.Tag = "CB01"
         Me.cmdSave.Text = "Luu"
@@ -653,9 +635,9 @@ Public Class frmVoucher
         '
         Me.cmdNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdNew.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdNew.Location = New System.Drawing.Point(62, 428)
+        Me.cmdNew.Location = New System.Drawing.Point(74, 493)
         Me.cmdNew.Name = "cmdNew"
-        Me.cmdNew.Size = New System.Drawing.Size(60, 23)
+        Me.cmdNew.Size = New System.Drawing.Size(72, 26)
         Me.cmdNew.TabIndex = 13
         Me.cmdNew.Tag = "CB02"
         Me.cmdNew.Text = "Moi"
@@ -665,9 +647,9 @@ Public Class frmVoucher
         '
         Me.cmdPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdPrint.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdPrint.Location = New System.Drawing.Point(122, 428)
+        Me.cmdPrint.Location = New System.Drawing.Point(146, 493)
         Me.cmdPrint.Name = "cmdPrint"
-        Me.cmdPrint.Size = New System.Drawing.Size(60, 23)
+        Me.cmdPrint.Size = New System.Drawing.Size(72, 26)
         Me.cmdPrint.TabIndex = 14
         Me.cmdPrint.Tag = "CB03"
         Me.cmdPrint.Text = "In ctu"
@@ -677,9 +659,9 @@ Public Class frmVoucher
         '
         Me.cmdEdit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdEdit.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdEdit.Location = New System.Drawing.Point(182, 428)
+        Me.cmdEdit.Location = New System.Drawing.Point(218, 493)
         Me.cmdEdit.Name = "cmdEdit"
-        Me.cmdEdit.Size = New System.Drawing.Size(60, 23)
+        Me.cmdEdit.Size = New System.Drawing.Size(72, 26)
         Me.cmdEdit.TabIndex = 15
         Me.cmdEdit.Tag = "CB04"
         Me.cmdEdit.Text = "Sua"
@@ -689,9 +671,9 @@ Public Class frmVoucher
         '
         Me.cmdDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdDelete.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdDelete.Location = New System.Drawing.Point(242, 428)
+        Me.cmdDelete.Location = New System.Drawing.Point(290, 493)
         Me.cmdDelete.Name = "cmdDelete"
-        Me.cmdDelete.Size = New System.Drawing.Size(60, 23)
+        Me.cmdDelete.Size = New System.Drawing.Size(72, 26)
         Me.cmdDelete.TabIndex = 16
         Me.cmdDelete.Tag = "CB05"
         Me.cmdDelete.Text = "Xoa"
@@ -701,9 +683,9 @@ Public Class frmVoucher
         '
         Me.cmdView.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdView.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdView.Location = New System.Drawing.Point(302, 428)
+        Me.cmdView.Location = New System.Drawing.Point(362, 493)
         Me.cmdView.Name = "cmdView"
-        Me.cmdView.Size = New System.Drawing.Size(60, 23)
+        Me.cmdView.Size = New System.Drawing.Size(72, 26)
         Me.cmdView.TabIndex = 17
         Me.cmdView.Tag = "CB06"
         Me.cmdView.Text = "Xem"
@@ -713,9 +695,9 @@ Public Class frmVoucher
         '
         Me.cmdSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdSearch.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdSearch.Location = New System.Drawing.Point(362, 428)
+        Me.cmdSearch.Location = New System.Drawing.Point(434, 493)
         Me.cmdSearch.Name = "cmdSearch"
-        Me.cmdSearch.Size = New System.Drawing.Size(60, 23)
+        Me.cmdSearch.Size = New System.Drawing.Size(72, 26)
         Me.cmdSearch.TabIndex = 18
         Me.cmdSearch.Tag = "CB07"
         Me.cmdSearch.Text = "Tim"
@@ -725,9 +707,9 @@ Public Class frmVoucher
         '
         Me.cmdClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdClose.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdClose.Location = New System.Drawing.Point(422, 428)
+        Me.cmdClose.Location = New System.Drawing.Point(506, 493)
         Me.cmdClose.Name = "cmdClose"
-        Me.cmdClose.Size = New System.Drawing.Size(60, 23)
+        Me.cmdClose.Size = New System.Drawing.Size(72, 26)
         Me.cmdClose.TabIndex = 19
         Me.cmdClose.Tag = "CB08"
         Me.cmdClose.Text = "Quay ra"
@@ -737,9 +719,9 @@ Public Class frmVoucher
         '
         Me.cmdOption.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cmdOption.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdOption.Location = New System.Drawing.Point(543, 428)
+        Me.cmdOption.Location = New System.Drawing.Point(753, 493)
         Me.cmdOption.Name = "cmdOption"
-        Me.cmdOption.Size = New System.Drawing.Size(20, 23)
+        Me.cmdOption.Size = New System.Drawing.Size(24, 26)
         Me.cmdOption.TabIndex = 20
         Me.cmdOption.TabStop = False
         Me.cmdOption.Tag = "CB09"
@@ -749,9 +731,9 @@ Public Class frmVoucher
         '
         Me.cmdTop.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cmdTop.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdTop.Location = New System.Drawing.Point(562, 428)
+        Me.cmdTop.Location = New System.Drawing.Point(775, 493)
         Me.cmdTop.Name = "cmdTop"
-        Me.cmdTop.Size = New System.Drawing.Size(20, 23)
+        Me.cmdTop.Size = New System.Drawing.Size(24, 26)
         Me.cmdTop.TabIndex = 21
         Me.cmdTop.TabStop = False
         Me.cmdTop.Tag = "CB10"
@@ -761,9 +743,9 @@ Public Class frmVoucher
         '
         Me.cmdPrev.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cmdPrev.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdPrev.Location = New System.Drawing.Point(581, 428)
+        Me.cmdPrev.Location = New System.Drawing.Point(798, 493)
         Me.cmdPrev.Name = "cmdPrev"
-        Me.cmdPrev.Size = New System.Drawing.Size(20, 23)
+        Me.cmdPrev.Size = New System.Drawing.Size(24, 26)
         Me.cmdPrev.TabIndex = 22
         Me.cmdPrev.TabStop = False
         Me.cmdPrev.Tag = "CB11"
@@ -773,9 +755,9 @@ Public Class frmVoucher
         '
         Me.cmdNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cmdNext.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdNext.Location = New System.Drawing.Point(600, 428)
+        Me.cmdNext.Location = New System.Drawing.Point(821, 493)
         Me.cmdNext.Name = "cmdNext"
-        Me.cmdNext.Size = New System.Drawing.Size(20, 23)
+        Me.cmdNext.Size = New System.Drawing.Size(24, 26)
         Me.cmdNext.TabIndex = 23
         Me.cmdNext.TabStop = False
         Me.cmdNext.Tag = "CB12"
@@ -785,9 +767,9 @@ Public Class frmVoucher
         '
         Me.cmdBottom.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cmdBottom.BackColor = System.Drawing.SystemColors.Control
-        Me.cmdBottom.Location = New System.Drawing.Point(619, 428)
+        Me.cmdBottom.Location = New System.Drawing.Point(844, 493)
         Me.cmdBottom.Name = "cmdBottom"
-        Me.cmdBottom.Size = New System.Drawing.Size(20, 23)
+        Me.cmdBottom.Size = New System.Drawing.Size(24, 26)
         Me.cmdBottom.TabIndex = 24
         Me.cmdBottom.TabStop = False
         Me.cmdBottom.Tag = "CB13"
@@ -796,9 +778,9 @@ Public Class frmVoucher
         'lblMa_dvcs
         '
         Me.lblMa_dvcs.AutoSize = True
-        Me.lblMa_dvcs.Location = New System.Drawing.Point(272, 456)
+        Me.lblMa_dvcs.Location = New System.Drawing.Point(326, 526)
         Me.lblMa_dvcs.Name = "lblMa_dvcs"
-        Me.lblMa_dvcs.Size = New System.Drawing.Size(48, 13)
+        Me.lblMa_dvcs.Size = New System.Drawing.Size(60, 17)
         Me.lblMa_dvcs.TabIndex = 13
         Me.lblMa_dvcs.Tag = "L001"
         Me.lblMa_dvcs.Text = "Ma dvcs"
@@ -808,9 +790,9 @@ Public Class frmVoucher
         '
         Me.txtMa_dvcs.BackColor = System.Drawing.Color.White
         Me.txtMa_dvcs.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_dvcs.Location = New System.Drawing.Point(320, 456)
+        Me.txtMa_dvcs.Location = New System.Drawing.Point(384, 526)
         Me.txtMa_dvcs.Name = "txtMa_dvcs"
-        Me.txtMa_dvcs.Size = New System.Drawing.Size(100, 20)
+        Me.txtMa_dvcs.Size = New System.Drawing.Size(120, 22)
         Me.txtMa_dvcs.TabIndex = 0
         Me.txtMa_dvcs.Tag = "FCNBCF"
         Me.txtMa_dvcs.Text = "TXTMA_DVCS"
@@ -821,9 +803,9 @@ Public Class frmVoucher
         Me.lblTen_dvcs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTen_dvcs.AutoSize = True
-        Me.lblTen_dvcs.Location = New System.Drawing.Point(424, 456)
+        Me.lblTen_dvcs.Location = New System.Drawing.Point(509, 526)
         Me.lblTen_dvcs.Name = "lblTen_dvcs"
-        Me.lblTen_dvcs.Size = New System.Drawing.Size(87, 13)
+        Me.lblTen_dvcs.Size = New System.Drawing.Size(113, 17)
         Me.lblTen_dvcs.TabIndex = 15
         Me.lblTen_dvcs.Tag = "FCRF"
         Me.lblTen_dvcs.Text = "Ten don vi co so"
@@ -833,9 +815,9 @@ Public Class frmVoucher
         '
         Me.lblSo_ct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSo_ct.AutoSize = True
-        Me.lblSo_ct.Location = New System.Drawing.Point(438, 7)
+        Me.lblSo_ct.Location = New System.Drawing.Point(627, 8)
         Me.lblSo_ct.Name = "lblSo_ct"
-        Me.lblSo_ct.Size = New System.Drawing.Size(32, 13)
+        Me.lblSo_ct.Size = New System.Drawing.Size(40, 17)
         Me.lblSo_ct.TabIndex = 16
         Me.lblSo_ct.Tag = "L009"
         Me.lblSo_ct.Text = "So ct"
@@ -845,10 +827,10 @@ Public Class frmVoucher
         Me.txtSo_ct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtSo_ct.BackColor = System.Drawing.Color.White
         Me.txtSo_ct.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtSo_ct.Location = New System.Drawing.Point(538, 5)
+        Me.txtSo_ct.Location = New System.Drawing.Point(747, 6)
         Me.txtSo_ct.Name = "txtSo_ct"
-        Me.txtSo_ct.Size = New System.Drawing.Size(100, 20)
-        Me.txtSo_ct.TabIndex = 4
+        Me.txtSo_ct.Size = New System.Drawing.Size(120, 22)
+        Me.txtSo_ct.TabIndex = 6
         Me.txtSo_ct.Tag = "FCNBCF"
         Me.txtSo_ct.Text = "TXTSO_CT"
         Me.txtSo_ct.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -857,11 +839,11 @@ Public Class frmVoucher
         '
         Me.txtNgay_lct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtNgay_lct.BackColor = System.Drawing.Color.White
-        Me.txtNgay_lct.Location = New System.Drawing.Point(538, 26)
+        Me.txtNgay_lct.Location = New System.Drawing.Point(747, 30)
         Me.txtNgay_lct.MaxLength = 10
         Me.txtNgay_lct.Name = "txtNgay_lct"
-        Me.txtNgay_lct.Size = New System.Drawing.Size(100, 20)
-        Me.txtNgay_lct.TabIndex = 5
+        Me.txtNgay_lct.Size = New System.Drawing.Size(120, 22)
+        Me.txtNgay_lct.TabIndex = 7
         Me.txtNgay_lct.Tag = "FDNBCFDF"
         Me.txtNgay_lct.Text = "  /  /    "
         Me.txtNgay_lct.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -872,10 +854,10 @@ Public Class frmVoucher
         Me.txtTy_gia.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtTy_gia.BackColor = System.Drawing.Color.White
         Me.txtTy_gia.Format = "m_ip_tg"
-        Me.txtTy_gia.Location = New System.Drawing.Point(320, 454)
+        Me.txtTy_gia.Location = New System.Drawing.Point(485, 524)
         Me.txtTy_gia.MaxLength = 8
         Me.txtTy_gia.Name = "txtTy_gia"
-        Me.txtTy_gia.Size = New System.Drawing.Size(100, 20)
+        Me.txtTy_gia.Size = New System.Drawing.Size(120, 22)
         Me.txtTy_gia.TabIndex = 13
         Me.txtTy_gia.Tag = "FNCF"
         Me.txtTy_gia.Text = "m_ip_tg"
@@ -887,9 +869,9 @@ Public Class frmVoucher
         '
         Me.lblNgay_lct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblNgay_lct.AutoSize = True
-        Me.lblNgay_lct.Location = New System.Drawing.Point(438, 28)
+        Me.lblNgay_lct.Location = New System.Drawing.Point(627, 32)
         Me.lblNgay_lct.Name = "lblNgay_lct"
-        Me.lblNgay_lct.Size = New System.Drawing.Size(49, 13)
+        Me.lblNgay_lct.Size = New System.Drawing.Size(64, 17)
         Me.lblNgay_lct.TabIndex = 20
         Me.lblNgay_lct.Tag = "L010"
         Me.lblNgay_lct.Text = "Ngay lap"
@@ -898,9 +880,9 @@ Public Class frmVoucher
         '
         Me.lblNgay_ct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblNgay_ct.AutoSize = True
-        Me.lblNgay_ct.Location = New System.Drawing.Point(32, 456)
+        Me.lblNgay_ct.Location = New System.Drawing.Point(139, 526)
         Me.lblNgay_ct.Name = "lblNgay_ct"
-        Me.lblNgay_ct.Size = New System.Drawing.Size(83, 13)
+        Me.lblNgay_ct.Size = New System.Drawing.Size(108, 17)
         Me.lblNgay_ct.TabIndex = 21
         Me.lblNgay_ct.Tag = "L011"
         Me.lblNgay_ct.Text = "Ngay hach toan"
@@ -910,9 +892,9 @@ Public Class frmVoucher
         '
         Me.lblTy_gia.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTy_gia.AutoSize = True
-        Me.lblTy_gia.Location = New System.Drawing.Point(72, 456)
+        Me.lblTy_gia.Location = New System.Drawing.Point(187, 526)
         Me.lblTy_gia.Name = "lblTy_gia"
-        Me.lblTy_gia.Size = New System.Drawing.Size(36, 13)
+        Me.lblTy_gia.Size = New System.Drawing.Size(47, 17)
         Me.lblTy_gia.TabIndex = 22
         Me.lblTy_gia.Tag = "L012"
         Me.lblTy_gia.Text = "Ty gia"
@@ -922,10 +904,10 @@ Public Class frmVoucher
         '
         Me.txtNgay_ct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtNgay_ct.BackColor = System.Drawing.Color.White
-        Me.txtNgay_ct.Location = New System.Drawing.Point(320, 454)
+        Me.txtNgay_ct.Location = New System.Drawing.Point(485, 524)
         Me.txtNgay_ct.MaxLength = 10
         Me.txtNgay_ct.Name = "txtNgay_ct"
-        Me.txtNgay_ct.Size = New System.Drawing.Size(100, 20)
+        Me.txtNgay_ct.Size = New System.Drawing.Size(120, 22)
         Me.txtNgay_ct.TabIndex = 11
         Me.txtNgay_ct.Tag = "FDNBCFDF"
         Me.txtNgay_ct.Text = "  /  /    "
@@ -938,9 +920,9 @@ Public Class frmVoucher
         Me.cmdMa_nt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cmdMa_nt.BackColor = System.Drawing.SystemColors.Control
         Me.cmdMa_nt.Enabled = False
-        Me.cmdMa_nt.Location = New System.Drawing.Point(152, 454)
+        Me.cmdMa_nt.Location = New System.Drawing.Point(283, 524)
         Me.cmdMa_nt.Name = "cmdMa_nt"
-        Me.cmdMa_nt.Size = New System.Drawing.Size(36, 20)
+        Me.cmdMa_nt.Size = New System.Drawing.Size(44, 23)
         Me.cmdMa_nt.TabIndex = 12
         Me.cmdMa_nt.TabStop = False
         Me.cmdMa_nt.Tag = "FCCFCMDDF"
@@ -954,19 +936,19 @@ Public Class frmVoucher
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tbDetail.Controls.Add(Me.tpgDetail)
-        Me.tbDetail.Location = New System.Drawing.Point(2, 100)
+        Me.tbDetail.Location = New System.Drawing.Point(2, 109)
         Me.tbDetail.Name = "tbDetail"
         Me.tbDetail.SelectedIndex = 0
-        Me.tbDetail.Size = New System.Drawing.Size(638, 296)
-        Me.tbDetail.TabIndex = 10
+        Me.tbDetail.Size = New System.Drawing.Size(867, 347)
+        Me.tbDetail.TabIndex = 11
         '
         'tpgDetail
         '
         Me.tpgDetail.BackColor = System.Drawing.SystemColors.Control
         Me.tpgDetail.Controls.Add(Me.grdDetail)
-        Me.tpgDetail.Location = New System.Drawing.Point(4, 22)
+        Me.tpgDetail.Location = New System.Drawing.Point(4, 25)
         Me.tpgDetail.Name = "tpgDetail"
-        Me.tpgDetail.Size = New System.Drawing.Size(630, 270)
+        Me.tpgDetail.Size = New System.Drawing.Size(859, 318)
         Me.tpgDetail.TabIndex = 0
         Me.tpgDetail.Tag = "L016"
         Me.tpgDetail.Text = "Chung tu"
@@ -986,7 +968,7 @@ Public Class frmVoucher
         Me.grdDetail.HeaderForeColor = System.Drawing.SystemColors.ControlText
         Me.grdDetail.Location = New System.Drawing.Point(-1, -1)
         Me.grdDetail.Name = "grdDetail"
-        Me.grdDetail.Size = New System.Drawing.Size(633, 271)
+        Me.grdDetail.Size = New System.Drawing.Size(860, 314)
         Me.grdDetail.TabIndex = 0
         Me.grdDetail.Tag = "L008CF"
         '
@@ -994,10 +976,10 @@ Public Class frmVoucher
         '
         Me.txtStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.txtStatus.BackColor = System.Drawing.Color.White
-        Me.txtStatus.Location = New System.Drawing.Point(8, 454)
+        Me.txtStatus.Location = New System.Drawing.Point(10, 523)
         Me.txtStatus.MaxLength = 1
         Me.txtStatus.Name = "txtStatus"
-        Me.txtStatus.Size = New System.Drawing.Size(25, 20)
+        Me.txtStatus.Size = New System.Drawing.Size(30, 22)
         Me.txtStatus.TabIndex = 41
         Me.txtStatus.TabStop = False
         Me.txtStatus.Tag = "FCCF"
@@ -1009,9 +991,9 @@ Public Class frmVoucher
         '
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(438, 49)
+        Me.lblStatus.Location = New System.Drawing.Point(627, 57)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(55, 13)
+        Me.lblStatus.Size = New System.Drawing.Size(73, 17)
         Me.lblStatus.TabIndex = 29
         Me.lblStatus.Tag = ""
         Me.lblStatus.Text = "Trang thai"
@@ -1020,9 +1002,9 @@ Public Class frmVoucher
         '
         Me.lblStatusMess.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusMess.AutoSize = True
-        Me.lblStatusMess.Location = New System.Drawing.Point(48, 456)
+        Me.lblStatusMess.Location = New System.Drawing.Point(58, 525)
         Me.lblStatusMess.Name = "lblStatusMess"
-        Me.lblStatusMess.Size = New System.Drawing.Size(191, 13)
+        Me.lblStatusMess.Size = New System.Drawing.Size(253, 17)
         Me.lblStatusMess.TabIndex = 42
         Me.lblStatusMess.Tag = ""
         Me.lblStatusMess.Text = "1 - Ghi vao SC, 0 - Chua ghi vao so cai"
@@ -1030,20 +1012,20 @@ Public Class frmVoucher
         '
         'txtKeyPress
         '
-        Me.txtKeyPress.Location = New System.Drawing.Point(415, 78)
+        Me.txtKeyPress.Location = New System.Drawing.Point(609, 81)
         Me.txtKeyPress.Name = "txtKeyPress"
-        Me.txtKeyPress.Size = New System.Drawing.Size(10, 20)
-        Me.txtKeyPress.TabIndex = 8
+        Me.txtKeyPress.Size = New System.Drawing.Size(12, 22)
+        Me.txtKeyPress.TabIndex = 10
         '
         'cboStatus
         '
         Me.cboStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboStatus.BackColor = System.Drawing.Color.White
         Me.cboStatus.Enabled = False
-        Me.cboStatus.Location = New System.Drawing.Point(498, 47)
+        Me.cboStatus.Location = New System.Drawing.Point(699, 54)
         Me.cboStatus.Name = "cboStatus"
-        Me.cboStatus.Size = New System.Drawing.Size(140, 21)
-        Me.cboStatus.TabIndex = 6
+        Me.cboStatus.Size = New System.Drawing.Size(168, 24)
+        Me.cboStatus.TabIndex = 8
         Me.cboStatus.TabStop = False
         Me.cboStatus.Tag = ""
         Me.cboStatus.Text = "cboStatus"
@@ -1052,10 +1034,10 @@ Public Class frmVoucher
         '
         Me.cboAction.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cboAction.BackColor = System.Drawing.Color.White
-        Me.cboAction.Location = New System.Drawing.Point(498, 68)
+        Me.cboAction.Location = New System.Drawing.Point(699, 78)
         Me.cboAction.Name = "cboAction"
-        Me.cboAction.Size = New System.Drawing.Size(140, 21)
-        Me.cboAction.TabIndex = 7
+        Me.cboAction.Size = New System.Drawing.Size(168, 24)
+        Me.cboAction.TabIndex = 9
         Me.cboAction.TabStop = False
         Me.cboAction.Tag = "CF"
         Me.cboAction.Text = "cboAction"
@@ -1064,9 +1046,9 @@ Public Class frmVoucher
         '
         Me.lblAction.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblAction.AutoSize = True
-        Me.lblAction.Location = New System.Drawing.Point(438, 70)
+        Me.lblAction.Location = New System.Drawing.Point(627, 81)
         Me.lblAction.Name = "lblAction"
-        Me.lblAction.Size = New System.Drawing.Size(30, 13)
+        Me.lblAction.Size = New System.Drawing.Size(39, 17)
         Me.lblAction.TabIndex = 9
         Me.lblAction.Tag = ""
         Me.lblAction.Text = "Xu ly"
@@ -1074,9 +1056,9 @@ Public Class frmVoucher
         'lblMa_kh
         '
         Me.lblMa_kh.AutoSize = True
-        Me.lblMa_kh.Location = New System.Drawing.Point(2, 7)
+        Me.lblMa_kh.Location = New System.Drawing.Point(2, 9)
         Me.lblMa_kh.Name = "lblMa_kh"
-        Me.lblMa_kh.Size = New System.Drawing.Size(55, 13)
+        Me.lblMa_kh.Size = New System.Drawing.Size(69, 17)
         Me.lblMa_kh.TabIndex = 34
         Me.lblMa_kh.Tag = "L002"
         Me.lblMa_kh.Text = "Ma khach"
@@ -1085,9 +1067,9 @@ Public Class frmVoucher
         '
         Me.txtMa_kh.BackColor = System.Drawing.Color.White
         Me.txtMa_kh.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_kh.Location = New System.Drawing.Point(88, 5)
+        Me.txtMa_kh.Location = New System.Drawing.Point(106, 6)
         Me.txtMa_kh.Name = "txtMa_kh"
-        Me.txtMa_kh.Size = New System.Drawing.Size(100, 20)
+        Me.txtMa_kh.Size = New System.Drawing.Size(120, 22)
         Me.txtMa_kh.TabIndex = 0
         Me.txtMa_kh.Tag = "FCNBCF"
         Me.txtMa_kh.Text = "TXTMA_KH"
@@ -1096,9 +1078,10 @@ Public Class frmVoucher
         '
         Me.lblTen_kh.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTen_kh.Location = New System.Drawing.Point(192, 8)
+        Me.lblTen_kh.AutoSize = True
+        Me.lblTen_kh.Location = New System.Drawing.Point(230, 8)
         Me.lblTen_kh.Name = "lblTen_kh"
-        Me.lblTen_kh.Size = New System.Drawing.Size(233, 15)
+        Me.lblTen_kh.Size = New System.Drawing.Size(77, 17)
         Me.lblTen_kh.TabIndex = 36
         Me.lblTen_kh.Tag = "FCRF"
         Me.lblTen_kh.Text = "Ten Khach"
@@ -1107,9 +1090,9 @@ Public Class frmVoucher
         '
         Me.lblTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTotal.AutoSize = True
-        Me.lblTotal.Location = New System.Drawing.Point(437, 403)
+        Me.lblTotal.Location = New System.Drawing.Point(625, 464)
         Me.lblTotal.Name = "lblTotal"
-        Me.lblTotal.Size = New System.Drawing.Size(59, 13)
+        Me.lblTotal.Size = New System.Drawing.Size(76, 17)
         Me.lblTotal.TabIndex = 60
         Me.lblTotal.Tag = "L013"
         Me.lblTotal.Text = "Tong cong"
@@ -1117,9 +1100,9 @@ Public Class frmVoucher
         'lblTen
         '
         Me.lblTen.AutoSize = True
-        Me.lblTen.Location = New System.Drawing.Point(574, 456)
+        Me.lblTen.Location = New System.Drawing.Point(689, 526)
         Me.lblTen.Name = "lblTen"
-        Me.lblTen.Size = New System.Drawing.Size(59, 13)
+        Me.lblTen.Size = New System.Drawing.Size(76, 17)
         Me.lblTen.TabIndex = 68
         Me.lblTen.Tag = "RF"
         Me.lblTen.Text = "Ten chung"
@@ -1128,22 +1111,22 @@ Public Class frmVoucher
         'txtDien_giai
         '
         Me.txtDien_giai.BackColor = System.Drawing.Color.White
-        Me.txtDien_giai.Location = New System.Drawing.Point(88, 47)
+        Me.txtDien_giai.Location = New System.Drawing.Point(106, 30)
         Me.txtDien_giai.Name = "txtDien_giai"
-        Me.txtDien_giai.Size = New System.Drawing.Size(337, 20)
-        Me.txtDien_giai.TabIndex = 2
+        Me.txtDien_giai.Size = New System.Drawing.Size(446, 22)
+        Me.txtDien_giai.TabIndex = 1
         Me.txtDien_giai.Tag = "FCCF"
         Me.txtDien_giai.Text = "txtDien_giai"
         '
         'lblDien_giai
         '
         Me.lblDien_giai.AutoSize = True
-        Me.lblDien_giai.Location = New System.Drawing.Point(2, 49)
+        Me.lblDien_giai.Location = New System.Drawing.Point(2, 33)
         Me.lblDien_giai.Name = "lblDien_giai"
-        Me.lblDien_giai.Size = New System.Drawing.Size(58, 13)
+        Me.lblDien_giai.Size = New System.Drawing.Size(63, 17)
         Me.lblDien_giai.TabIndex = 75
         Me.lblDien_giai.Tag = "L014"
-        Me.lblDien_giai.Text = "So bao gia"
+        Me.lblDien_giai.Text = "Dien giai"
         '
         'txtT_so_luong
         '
@@ -1152,10 +1135,10 @@ Public Class frmVoucher
         Me.txtT_so_luong.Enabled = False
         Me.txtT_so_luong.ForeColor = System.Drawing.Color.Black
         Me.txtT_so_luong.Format = "m_ip_sl"
-        Me.txtT_so_luong.Location = New System.Drawing.Point(538, 401)
+        Me.txtT_so_luong.Location = New System.Drawing.Point(747, 462)
         Me.txtT_so_luong.MaxLength = 8
         Me.txtT_so_luong.Name = "txtT_so_luong"
-        Me.txtT_so_luong.Size = New System.Drawing.Size(100, 20)
+        Me.txtT_so_luong.Size = New System.Drawing.Size(120, 22)
         Me.txtT_so_luong.TabIndex = 11
         Me.txtT_so_luong.Tag = "FN"
         Me.txtT_so_luong.Text = "m_ip_sl"
@@ -1166,66 +1149,107 @@ Public Class frmVoucher
         '
         Me.txtLoai_ct.BackColor = System.Drawing.Color.White
         Me.txtLoai_ct.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtLoai_ct.Location = New System.Drawing.Point(520, 456)
+        Me.txtLoai_ct.Location = New System.Drawing.Point(624, 526)
         Me.txtLoai_ct.Name = "txtLoai_ct"
-        Me.txtLoai_ct.Size = New System.Drawing.Size(30, 20)
+        Me.txtLoai_ct.Size = New System.Drawing.Size(36, 22)
         Me.txtLoai_ct.TabIndex = 85
         Me.txtLoai_ct.Tag = "FC"
         Me.txtLoai_ct.Text = "TXTLOAI_CT"
         Me.txtLoai_ct.Visible = False
         '
-        'txtFnote1
+        'txtFcode3
         '
-        Me.txtFnote1.BackColor = System.Drawing.Color.White
-        Me.txtFnote1.Location = New System.Drawing.Point(88, 26)
-        Me.txtFnote1.Name = "txtFnote1"
-        Me.txtFnote1.Size = New System.Drawing.Size(337, 20)
-        Me.txtFnote1.TabIndex = 1
-        Me.txtFnote1.Tag = "FCCF"
-        Me.txtFnote1.Text = "txtFnote1"
+        Me.txtFcode3.BackColor = System.Drawing.Color.White
+        Me.txtFcode3.Location = New System.Drawing.Point(384, 79)
+        Me.txtFcode3.Name = "txtFcode3"
+        Me.txtFcode3.Size = New System.Drawing.Size(168, 22)
+        Me.txtFcode3.TabIndex = 5
+        Me.txtFcode3.Tag = "FCCF"
+        Me.txtFcode3.Text = "txtFcode3"
         '
         'lblOng_ba
         '
         Me.lblOng_ba.AutoSize = True
-        Me.lblOng_ba.Location = New System.Drawing.Point(2, 28)
+        Me.lblOng_ba.Location = New System.Drawing.Point(280, 82)
         Me.lblOng_ba.Name = "lblOng_ba"
-        Me.lblOng_ba.Size = New System.Drawing.Size(36, 13)
+        Me.lblOng_ba.Size = New System.Drawing.Size(31, 17)
         Me.lblOng_ba.TabIndex = 119
-        Me.lblOng_ba.Tag = "L005"
-        Me.lblOng_ba.Text = "Du an"
-        '
-        'txtNgay_lo
-        '
-        Me.txtNgay_lo.BackColor = System.Drawing.Color.White
-        Me.txtNgay_lo.Location = New System.Drawing.Point(88, 69)
-        Me.txtNgay_lo.MaxLength = 10
-        Me.txtNgay_lo.Name = "txtNgay_lo"
-        Me.txtNgay_lo.Size = New System.Drawing.Size(100, 20)
-        Me.txtNgay_lo.TabIndex = 3
-        Me.txtNgay_lo.Tag = "FDNBCFDF"
-        Me.txtNgay_lo.Text = "  /  /    "
-        Me.txtNgay_lo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.txtNgay_lo.Value = New Date(CType(0, Long))
+        Me.lblOng_ba.Tag = "L019"
+        Me.lblOng_ba.Text = "Job"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(2, 73)
+        Me.Label1.Location = New System.Drawing.Point(2, 82)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(82, 13)
+        Me.Label1.Size = New System.Drawing.Size(46, 17)
         Me.Label1.TabIndex = 121
-        Me.Label1.Tag = "L003"
-        Me.Label1.Text = "Ngay giao hang"
+        Me.Label1.Tag = "L018"
+        Me.Label1.Text = "So bill"
+        '
+        'txtSo_lo
+        '
+        Me.txtSo_lo.BackColor = System.Drawing.Color.White
+        Me.txtSo_lo.Location = New System.Drawing.Point(106, 55)
+        Me.txtSo_lo.Name = "txtSo_lo"
+        Me.txtSo_lo.Size = New System.Drawing.Size(168, 22)
+        Me.txtSo_lo.TabIndex = 2
+        Me.txtSo_lo.Tag = "FCCF"
+        Me.txtSo_lo.Text = "txtSo_lo"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(2, 58)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(55, 17)
+        Me.Label2.TabIndex = 123
+        Me.Label2.Tag = "L005"
+        Me.Label2.Text = "To khai"
+        '
+        'txtFcode1
+        '
+        Me.txtFcode1.BackColor = System.Drawing.Color.White
+        Me.txtFcode1.Location = New System.Drawing.Point(384, 55)
+        Me.txtFcode1.Name = "txtFcode1"
+        Me.txtFcode1.Size = New System.Drawing.Size(168, 22)
+        Me.txtFcode1.TabIndex = 3
+        Me.txtFcode1.Tag = "FCCF"
+        Me.txtFcode1.Text = "txtFcode1"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(280, 58)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(73, 17)
+        Me.Label3.TabIndex = 125
+        Me.Label3.Tag = "L017"
+        Me.Label3.Text = "So invoice"
+        '
+        'txtFcode2
+        '
+        Me.txtFcode2.BackColor = System.Drawing.Color.White
+        Me.txtFcode2.Location = New System.Drawing.Point(106, 79)
+        Me.txtFcode2.Name = "txtFcode2"
+        Me.txtFcode2.Size = New System.Drawing.Size(168, 22)
+        Me.txtFcode2.TabIndex = 4
+        Me.txtFcode2.Tag = "FCCF"
+        Me.txtFcode2.Text = "txtFcode2"
         '
         'frmVoucher
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(642, 473)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
+        Me.ClientSize = New System.Drawing.Size(871, 545)
+        Me.Controls.Add(Me.txtFcode2)
+        Me.Controls.Add(Me.txtFcode1)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.txtSo_lo)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.txtNgay_lo)
         Me.Controls.Add(Me.lblMa_dvcs)
         Me.Controls.Add(Me.lblStatusMess)
-        Me.Controls.Add(Me.txtFnote1)
+        Me.Controls.Add(Me.txtFcode3)
         Me.Controls.Add(Me.lblOng_ba)
         Me.Controls.Add(Me.txtLoai_ct)
         Me.Controls.Add(Me.txtT_so_luong)
@@ -1277,29 +1301,14 @@ Public Class frmVoucher
         Me.PerformLayout()
 
     End Sub
-    Private Sub InitInventory()
-        Me.xInventory.ColItem = Me.colMa_vt
-        Me.xInventory.ColLot = Me.colMa_lo
-        Me.xInventory.ColSite = Me.colMa_kho
-        Me.xInventory.ColLocation = Me.colMa_vi_tri
-        Me.xInventory.ColUOM = Me.colDvt
-        Me.xInventory.colQty = Me.colSo_luong
-        Me.xInventory.txtUnit = Me.txtMa_dvcs
-        Me.xInventory.InvVoucher = Me.oVoucher
-        Me.xInventory.oInvItem = Me.oInvItemDetail
-        Me.xInventory.oInvSite = Me.oSite
-        Me.xInventory.oInvLocation = Me.oLocation
-        Me.xInventory.oInvLot = Me.oLot
-        Me.xInventory.oInvUOM = Me.oUOM
-        Me.xInventory.Init()
-    End Sub
+
 
     Public Sub InitRecords()
         Dim str As String
         If oVoucher.isRead Then
-            str = String.Concat(New String() {"EXEC fs_LoadDX4Tran '", modVoucher.cLan, "', '", modVoucher.cIDVoucher, "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_sl_ct0"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), "', '", modVoucher.VoucherCode, "', -1"})
+            str = String.Concat(New String() {"EXEC spLoadPD4Tran '", modVoucher.cLan, "', '", modVoucher.cIDVoucher, "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_sl_ct0"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), "', '", modVoucher.VoucherCode, "', -1"})
         Else
-            str = String.Concat(New String() {"EXEC fs_LoadDX4Tran '", modVoucher.cLan, "', '", modVoucher.cIDVoucher, "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_sl_ct0"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), "', '", modVoucher.VoucherCode, "', ", Strings.Trim(StringType.FromObject(Reg.GetRegistryKey("CurrUserID")))})
+            str = String.Concat(New String() {"EXEC spLoadPD4Tran '", modVoucher.cLan, "', '", modVoucher.cIDVoucher, "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_sl_ct0"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), "', '", modVoucher.VoucherCode, "', ", Strings.Trim(StringType.FromObject(Reg.GetRegistryKey("CurrUserID")))})
         End If
         str = (str & GetLoadParameters())
         Dim ds As New DataSet
@@ -1433,10 +1442,7 @@ Public Class frmVoucher
     Private Sub RetrieveItems(ByVal sender As Object, ByVal e As EventArgs)
         Select Case IntegerType.FromObject(LateBinding.LateGet(sender, Nothing, "Index", New Object(0 - 1) {}, Nothing, Nothing))
             Case 0
-                RetrieveItemsFromSV()
-                Exit Select
-            Case 2
-                RetrieveItemsFromSI()
+                RetrieveItemsFromPK()
                 Exit Select
         End Select
     End Sub
@@ -1543,67 +1549,64 @@ Public Class frmVoucher
                         Return
                     End If
                 End If
-                If Not Me.xInventory.isValid Then
-                    oVoucher.isContinue = False
+
+                Dim str6 As String
+                Me.pnContent.Text = StringType.FromObject(modVoucher.oVar.Item("m_process"))
+                Me.UpdateList()
+                If (StringType.StrCmp(oVoucher.cAction, "New", False) = 0) Then
+                    Me.cIDNumber = oVoucher.GetIdentityNumber
+                    modVoucher.tblMaster.AddNew()
+                    Me.iMasterRow = (modVoucher.tblMaster.Count - 1)
+                    modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec") = Me.cIDNumber
+                    modVoucher.tblMaster.Item(Me.iMasterRow).Item("ma_ct") = modVoucher.VoucherCode
                 Else
-                    Dim str6 As String
-                    Me.pnContent.Text = StringType.FromObject(modVoucher.oVar.Item("m_process"))
-                    Me.UpdateList()
-                    If (StringType.StrCmp(oVoucher.cAction, "New", False) = 0) Then
-                        Me.cIDNumber = oVoucher.GetIdentityNumber
-                        modVoucher.tblMaster.AddNew()
-                        Me.iMasterRow = (modVoucher.tblMaster.Count - 1)
-                        modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec") = Me.cIDNumber
-                        modVoucher.tblMaster.Item(Me.iMasterRow).Item("ma_ct") = modVoucher.VoucherCode
-                    Else
-                        Me.cIDNumber = StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec"))
-                        Me.BeforUpdateVc(Me.cIDNumber, "Edit")
-                    End If
-                    DirLib.SetDatetime(modVoucher.appConn, modVoucher.tblMaster.Item(Me.iMasterRow), oVoucher.cAction)
-                    Me.grdHeader.DataRow = modVoucher.tblMaster.Item(Me.iMasterRow).Row
-                    Me.grdHeader.Gather()
-                    GatherMemvar(modVoucher.tblMaster.Item(Me.iMasterRow), Me)
-                    modVoucher.tblMaster.Item(Me.iMasterRow).Item("so_ct") = Fox.PadL(Strings.Trim(StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("so_ct"))), Me.txtSo_ct.MaxLength)
-                    If (StringType.StrCmp(oVoucher.cAction, "New", False) = 0) Then
-                        str6 = GenSQLInsert((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), modVoucher.tblMaster.Item(Me.iMasterRow).Row)
-                    Else
-                        Dim cKey As String = StringType.FromObject(ObjectType.AddObj(ObjectType.AddObj("stt_rec = '", modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")), "'"))
-                        str6 = ((GenSQLUpdate((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), modVoucher.tblMaster.Item(Me.iMasterRow).Row, cKey) & ChrW(13) & GenSQLDelete(Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), cKey)) & ChrW(13) & GenSQLDelete("ctcp20", cKey))
-                    End If
-                    cString = "ma_ct, ngay_ct, so_ct, stt_rec"
-                    Dim str5 As String = ("stt_rec = '" & Me.cIDNumber & "' or stt_rec = '' or stt_rec is null")
-                    modVoucher.tblDetail.RowFilter = str5
-                    num3 = (modVoucher.tblDetail.Count - 1)
-                    Dim num4 As Integer = 0
-                    Dim num6 As Integer = num3
-                    num = 0
-                    Do While (num <= num6)
-                        If (ObjectType.ObjTst(modVoucher.tblDetail.Item(num).Item("stt_rec"), Interaction.IIf((StringType.StrCmp(oVoucher.cAction, "New", False) = 0), "", RuntimeHelpers.GetObjectValue(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec"))), False) = 0) Then
-                            Dim num5 As Integer = IntegerType.FromObject(Fox.GetWordCount(cString, ","c))
-                            num2 = 1
-                            Do While (num2 <= num5)
-                                str = Strings.Trim(Fox.GetWordNum(cString, num2, ","c))
-                                modVoucher.tblDetail.Item(num).Item(str) = RuntimeHelpers.GetObjectValue(modVoucher.tblMaster.Item(Me.iMasterRow).Item(str))
-                                num2 += 1
-                            Loop
-                            num4 += 1
-                            modVoucher.tblDetail.Item(num).Item("line_nbr") = num4
-                            Me.grdDetail.Update()
-                            str6 = (str6 & ChrW(13) & GenSQLInsert((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), modVoucher.tblDetail.Item(num).Row))
-                        End If
-                        num += 1
-                    Loop
-                    oVoucher.IncreaseVoucherNo(Strings.Trim(Me.txtSo_ct.Text))
-                    Me.EDTBColumns(False)
-                    Sql.SQLCompressExecute((modVoucher.appConn), str6)
-                    str6 = Me.Post
-                    Sql.SQLExecute((modVoucher.appConn), str6)
-                    Me.grdHeader.UpdateFreeField(modVoucher.appConn, StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")))
-                    Me.AfterUpdateVc(StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")), "Save")
-                    Me.pnContent.Text = ""
-                    SaveLocalDataView(modVoucher.tblDetail)
-                    oVoucher.RefreshStatus(Me.cboStatus)
+                    Me.cIDNumber = StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec"))
+                    'Me.BeforUpdateVc(Me.cIDNumber, "Edit")
                 End If
+                DirLib.SetDatetime(modVoucher.appConn, modVoucher.tblMaster.Item(Me.iMasterRow), oVoucher.cAction)
+                Me.grdHeader.DataRow = modVoucher.tblMaster.Item(Me.iMasterRow).Row
+                Me.grdHeader.Gather()
+                GatherMemvar(modVoucher.tblMaster.Item(Me.iMasterRow), Me)
+                modVoucher.tblMaster.Item(Me.iMasterRow).Item("so_ct") = Fox.PadL(Strings.Trim(StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("so_ct"))), Me.txtSo_ct.MaxLength)
+                If (StringType.StrCmp(oVoucher.cAction, "New", False) = 0) Then
+                    str6 = GenSQLInsert((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), modVoucher.tblMaster.Item(Me.iMasterRow).Row)
+                Else
+                    Dim cKey As String = StringType.FromObject(ObjectType.AddObj(ObjectType.AddObj("stt_rec = '", modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")), "'"))
+                    str6 = ((GenSQLUpdate((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), modVoucher.tblMaster.Item(Me.iMasterRow).Row, cKey) & ChrW(13) & GenSQLDelete(Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), cKey)) & ChrW(13) & GenSQLDelete("ctcp20", cKey))
+                End If
+                cString = "ma_ct, ngay_ct, so_ct, stt_rec"
+                Dim str5 As String = ("stt_rec = '" & Me.cIDNumber & "' or stt_rec = '' or stt_rec is null")
+                modVoucher.tblDetail.RowFilter = str5
+                num3 = (modVoucher.tblDetail.Count - 1)
+                Dim num4 As Integer = 0
+                Dim num6 As Integer = num3
+                num = 0
+                Do While (num <= num6)
+                    If (ObjectType.ObjTst(modVoucher.tblDetail.Item(num).Item("stt_rec"), Interaction.IIf((StringType.StrCmp(oVoucher.cAction, "New", False) = 0), "", RuntimeHelpers.GetObjectValue(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec"))), False) = 0) Then
+                        Dim num5 As Integer = IntegerType.FromObject(Fox.GetWordCount(cString, ","c))
+                        num2 = 1
+                        Do While (num2 <= num5)
+                            str = Strings.Trim(Fox.GetWordNum(cString, num2, ","c))
+                            modVoucher.tblDetail.Item(num).Item(str) = RuntimeHelpers.GetObjectValue(modVoucher.tblMaster.Item(Me.iMasterRow).Item(str))
+                            num2 += 1
+                        Loop
+                        num4 += 1
+                        modVoucher.tblDetail.Item(num).Item("line_nbr") = num4
+                        Me.grdDetail.Update()
+                        str6 = (str6 & ChrW(13) & GenSQLInsert((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), modVoucher.tblDetail.Item(num).Row))
+                    End If
+                    num += 1
+                Loop
+                oVoucher.IncreaseVoucherNo(Strings.Trim(Me.txtSo_ct.Text))
+                Me.EDTBColumns(False)
+                Sql.SQLCompressExecute((modVoucher.appConn), str6)
+                'str6 = Me.Post
+                'Sql.SQLExecute((modVoucher.appConn), str6)
+                Me.grdHeader.UpdateFreeField(modVoucher.appConn, StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")))
+                'Me.AfterUpdateVc(StringType.FromObject(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")), "Save")
+                Me.pnContent.Text = ""
+                SaveLocalDataView(modVoucher.tblDetail)
+                oVoucher.RefreshStatus(Me.cboStatus)
             End If
         End If
     End Sub
@@ -1783,7 +1786,7 @@ Public Class frmVoucher
         frmAdd.Controls.Add(gridformtran2)
         frmAdd.Controls.Add(gridformtran)
         Dim grdFill As DataGrid = gridformtran2
-        Fill2Grid.Fill(modVoucher.sysConn, (modVoucher.tblMaster), grdFill, (tbs), (cols), "DX4Master")
+        Fill2Grid.Fill(modVoucher.sysConn, (modVoucher.tblMaster), grdFill, (tbs), (cols), "PD4Master")
         gridformtran2 = grdFill
         index = 0
         Do
@@ -1796,7 +1799,7 @@ Public Class frmVoucher
         Loop While (index < MaxColumns)
         cols(2).Alignment = HorizontalAlignment.Right
         grdFill = gridformtran
-        Fill2Grid.Fill(modVoucher.sysConn, (modVoucher.tblDetail), grdFill, (style), (cols), "DX4Detail")
+        Fill2Grid.Fill(modVoucher.sysConn, (modVoucher.tblDetail), grdFill, (style), (cols), "PD4Detail")
         gridformtran = grdFill
         index = 0
         Do
@@ -1842,7 +1845,6 @@ Public Class frmVoucher
 
     Private Sub WhenAddNewItem()
         modVoucher.tblDetail.Item(Me.grdDetail.CurrentRowIndex).Item("stt_rec0") = Me.GetIDItem(modVoucher.tblDetail, "0")
-        modVoucher.tblDetail.Item(Me.grdDetail.CurrentRowIndex).Item("giao_yn") = False
     End Sub
 
     Private Sub WhenItemLeave(ByVal sender As Object, ByVal e As EventArgs)
@@ -1909,22 +1911,6 @@ Public Class frmVoucher
                 view.Item("ma_lo") = str5
             End If
         End If
-        If clsfields.isEmpty(RuntimeHelpers.GetObjectValue(view.Item("ma_kho")), "C") Then
-            view.Item("ma_kho") = RuntimeHelpers.GetObjectValue(row.Item("ma_kho"))
-        End If
-        If clsfields.isEmpty(RuntimeHelpers.GetObjectValue(view.Item("ma_vi_tri")), "C") Then
-            view.Item("ma_vi_tri") = RuntimeHelpers.GetObjectValue(row.Item("ma_vi_tri"))
-        End If
-        view = Nothing
-    End Sub
-
-    Private Sub WhenLocationEnter(ByVal sender As Object, ByVal e As EventArgs)
-        Dim view As DataRowView = modVoucher.tblDetail.Item(Me.grdDetail.CurrentRowIndex)
-        If Not clsfields.isEmpty(RuntimeHelpers.GetObjectValue(view.Item("ma_kho")), "C") Then
-            Dim cKey As String = ("ma_kho = '" & Strings.Trim(StringType.FromObject(view.Item("ma_kho"))) & "'")
-            Me.oLocation.Key = cKey
-            Me.oLocation.Empty = (StringType.StrCmp(Strings.Trim(StringType.FromObject(Sql.GetValue((modVoucher.appConn), "dmvitri", "ma_vi_tri", cKey))), "", False) = 0)
-        End If
         view = Nothing
     End Sub
 
@@ -1938,38 +1924,6 @@ Public Class frmVoucher
         view = Nothing
     End Sub
 
-    Private Sub WhenSiteEnter(ByVal sender As Object, ByVal e As EventArgs)
-        Me.cOldSite = Strings.Trim(StringType.FromObject(LateBinding.LateGet(sender, Nothing, "Text", New Object(0 - 1) {}, Nothing, Nothing)))
-    End Sub
-
-    Private Sub WhenSiteLeave(ByVal sender As Object, ByVal e As EventArgs)
-        If (Me.grdDetail.CurrentRowIndex >= 0) Then
-            Dim str As String = Strings.Trim(StringType.FromObject(LateBinding.LateGet(sender, Nothing, "Text", New Object(0 - 1) {}, Nothing, Nothing)))
-            Dim view As DataRowView = modVoucher.tblDetail.Item(Me.grdDetail.CurrentRowIndex)
-            If Not ((StringType.StrCmp(Strings.Trim(str), Strings.Trim(Me.cOldSite), False) = 0) And Not clsfields.isEmpty(RuntimeHelpers.GetObjectValue(view.Item("ten_kho")), "C")) Then
-                If BooleanType.FromObject(Sql.GetValue((modVoucher.appConn), "dmkho", "dai_ly_yn", ("ma_kho = '" & str & "'"))) Then
-                    Dim str3 As String = Strings.Trim(StringType.FromObject(view.Item("ma_vt")))
-                    Dim str2 As String = Strings.Trim(StringType.FromObject(Sql.GetValue((modVoucher.appConn), "dmvt", "tk_dl", ("ma_vt = '" & str3 & "'"))))
-                    If (StringType.StrCmp(str2, "", False) <> 0) Then
-                        view.Item("tk_vt") = str2
-                    End If
-                End If
-                view = Nothing
-            End If
-        End If
-    End Sub
-
-    Private Sub WhenTransportTypeEnter(ByVal sender As Object, ByVal e As EventArgs)
-        Me.cOldTransportType = Strings.Trim(StringType.FromObject(LateBinding.LateGet(sender, Nothing, "Text", New Object(0 - 1) {}, Nothing, Nothing)))
-    End Sub
-
-    Private Sub WhenTransportTypeLeave(ByVal sender As Object, ByVal e As EventArgs)
-        Dim str As String = Strings.Trim(StringType.FromObject(LateBinding.LateGet(sender, Nothing, "Text", New Object(0 - 1) {}, Nothing, Nothing)))
-        Dim view As DataRowView = modVoucher.tblDetail.Item(Me.grdDetail.CurrentRowIndex)
-        If (StringType.StrCmp(Strings.Trim(str), Strings.Trim(Me.cOldTransportType), False) <> 0) Then
-            view = Nothing
-        End If
-    End Sub
 
     Private Sub WhenUOMEnter(ByVal sender As Object, ByVal e As EventArgs)
         Dim view As DataRowView = modVoucher.tblDetail.Item(Me.grdDetail.CurrentRowIndex)
@@ -2006,7 +1960,7 @@ Public Class frmVoucher
         view.Item("He_so") = num
         view = Nothing
     End Sub
-    Private Sub RetrieveItemsFromSI()
+    Private Sub RetrieveItemsFromPK()
         If Fox.InList(oVoucher.cAction, New Object() {"New", "Edit"}) Then
             If (StringType.StrCmp(Strings.Trim(Me.txtMa_kh.Text), "", False) = 0) Then
                 Msg.Alert(StringType.FromObject(modVoucher.oLan.Item("064")), 2)
@@ -2022,7 +1976,7 @@ Public Class frmVoucher
                     End If
                     Dim str As String = strSQLLong
                     strSQLLong = (strSQLLong & " AND a.ma_kh LIKE '" & Strings.Trim(Me.txtMa_kh.Text) & "%'")
-                    Dim tcSQL As String = String.Concat(New String() {"EXEC fs_SearchSITran4DX4 '", modVoucher.cLan, "', ", vouchersearchlibobj.ConvertLong2ShortStrings(strSQLLong, 10), ", ", vouchersearchlibobj.ConvertLong2ShortStrings(str, 10), ", 'ph66', 'ct66'"})
+                    Dim tcSQL As String = String.Concat(New String() {"EXEC spSearchPKTran4PD4 '", modVoucher.cLan, "', ", vouchersearchlibobj.ConvertLong2ShortStrings(strSQLLong, 10), ", ", vouchersearchlibobj.ConvertLong2ShortStrings(str, 10)})
                     Dim ds As New DataSet
                     Sql.SQLDecompressRetrieve((modVoucher.appConn), tcSQL, "tran", (ds))
                     Me.tblRetrieveMaster = New DataView
@@ -2056,7 +2010,7 @@ Public Class frmVoucher
                         frmAdd.StartPosition = FormStartPosition.CenterParent
                         Dim panel As StatusBarPanel = AddStb(frmAdd)
                         gridformtran2.CaptionVisible = False
-                        gridformtran2.ReadOnly = True
+                        gridformtran2.ReadOnly = False
                         gridformtran2.Top = 0
                         gridformtran2.Left = 0
                         gridformtran2.Height = CInt(Math.Round(CDbl((CDbl((Me.Height - SystemInformation.CaptionHeight)) / 2))))
@@ -2079,7 +2033,7 @@ Public Class frmVoucher
                         frmAdd.CancelButton = button
                         frmAdd.Controls.Add(gridformtran2)
                         frmAdd.Controls.Add(gridformtran)
-                        Fill2Grid.Fill(modVoucher.sysConn, (Me.tblRetrieveMaster), gridformtran2, (tbs), (cols), "SIMaster")
+                        Fill2Grid.Fill(modVoucher.sysConn, (Me.tblRetrieveMaster), gridformtran2, (tbs), (cols), "PKMaster")
                         index = 0
                         Do
                             If (Strings.InStr(modVoucher.tbcDetail(index).Format, "0", 0) > 0) Then
@@ -2090,7 +2044,25 @@ Public Class frmVoucher
                             index += 1
                         Loop While (index <= MaxColumns - 1)
                         cols(2).Alignment = HorizontalAlignment.Right
-                        Fill2Grid.Fill(modVoucher.sysConn, (Me.tblRetrieveDetail), gridformtran, (style), (cols), "SIDetail4DX4")
+
+                        Me.tblRetrieveMaster.AllowDelete = False
+                        Me.tblRetrieveMaster.AllowNew = False
+                        gridformtran2.TableStyles.Item(0).GridColumnStyles.Item(0).ReadOnly = False
+                        index = 0
+                        Do While (1 <> 0)
+                            Try
+                                index += 1
+                                gridformtran2.TableStyles.Item(0).GridColumnStyles.Item(index).ReadOnly = True
+                            Catch exception1 As Exception
+                                ProjectData.SetProjectError(exception1)
+                                Dim exception As Exception = exception1
+                                ProjectData.ClearProjectError()
+                                Exit Do
+                            End Try
+                        Loop
+
+
+                        Fill2Grid.Fill(modVoucher.sysConn, (Me.tblRetrieveDetail), gridformtran, (style), (cols), "PKDetail4PD4")
                         index = 0
                         Do
                             If (Strings.InStr(modVoucher.tbcDetail(index).Format, "0", 0) > 0) Then
@@ -2100,6 +2072,7 @@ Public Class frmVoucher
                             End If
                             index += 1
                         Loop While (index <= MaxColumns - 1)
+
                         Me.tblRetrieveDetail.AllowDelete = False
                         Me.tblRetrieveDetail.AllowNew = False
                         gridformtran.TableStyles.Item(0).GridColumnStyles.Item(0).ReadOnly = False
@@ -2150,6 +2123,9 @@ Public Class frmVoucher
                         frmAdd.Controls.Add(button4)
                         frmAdd.Controls.Add(button2)
                         frmAdd.Controls.Add(button3)
+                        xBoolColumn.AddEvent(DirectCast(gridformtran2.TableStyles.Item(0).GridColumnStyles.Item(0), DataGridBoolColumn), New xBoolColumn.BoolValueChangedEventHandler(AddressOf HandleBoolChanges), 18, 0, 0)
+                        gridSeachDetail = gridformtran
+                        xBoolColumn.AddEvent(DirectCast(gridformtran.TableStyles.Item(0).GridColumnStyles.Item(0), DataGridBoolColumn), New xBoolColumn.BoolValueChangedEventHandler(AddressOf HandleBoolChanges_Detail), 8, 0, 0)
                         frmAdd.ShowDialog()
                         If button4.Checked Then
                             ds = Nothing
@@ -2203,8 +2179,6 @@ Public Class frmVoucher
                             Do While (index >= 0)
                                 If clsfields.isEmpty(RuntimeHelpers.GetObjectValue(modVoucher.tblDetail.Item(index).Item("ma_vt")), "C") Then
                                     modVoucher.tblDetail.Item(index).Delete()
-                                ElseIf Not clsfields.isEmpty(RuntimeHelpers.GetObjectValue(modVoucher.tblDetail.Item(index).Item("stt_rec_px")), "C") Then
-                                    modVoucher.tblDetail.Item(index).Item("stt_rec0") = Me.GetIDItem(modVoucher.tblDetail, "0")
                                 End If
                                 index = (index + -1)
                             Loop
@@ -2219,224 +2193,33 @@ Public Class frmVoucher
             End If
         End If
     End Sub
-    Private Sub RetrieveItemsFromSV()
-        If Fox.InList(oVoucher.cAction, New Object() {"New", "Edit"}) Then
-            If (StringType.StrCmp(Strings.Trim(Me.txtMa_kh.Text), "", False) = 0) Then
-                Msg.Alert(StringType.FromObject(modVoucher.oLan.Item("064")), 2)
-            Else
-                Dim _date As New frmDate
-                If (_date.ShowDialog = DialogResult.OK) Then
-                    Dim strSQLLong As String = " 1 = 1"
-                    If (ObjectType.ObjTst(_date.txtNgay_ct.Text, Fox.GetEmptyDate, False) <> 0) Then
-                        strSQLLong = StringType.FromObject(ObjectType.AddObj(strSQLLong, ObjectType.AddObj(ObjectType.AddObj(" AND (a.ngay_ct >= ", Sql.ConvertVS2SQLType(_date.txtNgay_ct.Value, "")), ")")))
-                    End If
-                    If (ObjectType.ObjTst(Me.txtNgay_lct.Text, Fox.GetEmptyDate, False) <> 0) Then
-                        strSQLLong = StringType.FromObject(ObjectType.AddObj(strSQLLong, ObjectType.AddObj(ObjectType.AddObj(" AND (a.ngay_ct <= ", Sql.ConvertVS2SQLType(Me.txtNgay_lct.Value, "")), ")")))
-                    End If
-                    Dim str As String = strSQLLong
-                    strSQLLong = (strSQLLong & " AND a.ma_kh LIKE '" & Strings.Trim(Me.txtMa_kh.Text) & "%'")
-                    Dim tcSQL As String = String.Concat(New String() {"EXEC fs_SearchSVTran4DX4 '", modVoucher.cLan, "', ", vouchersearchlibobj.ConvertLong2ShortStrings(strSQLLong, 10), ", ", vouchersearchlibobj.ConvertLong2ShortStrings(str, 10), ", 'ph81', 'ct81'"})
-                    Dim ds As New DataSet
-                    Sql.SQLDecompressRetrieve((modVoucher.appConn), tcSQL, "tran", (ds))
-                    Me.tblRetrieveMaster = New DataView
-                    Me.tblRetrieveDetail = New DataView
-                    If (ds.Tables.Item(0).Rows.Count <= 0) Then
-                        Msg.Alert(StringType.FromObject(oVoucher.oClassMsg.Item("017")), 2)
-                    Else
-                        Me.tblRetrieveMaster.Table = ds.Tables.Item(0)
-                        Me.tblRetrieveDetail.Table = ds.Tables.Item(1)
-                        Dim frmAdd As New Form
-                        Dim gridformtran2 As New gridformtran
-                        Dim gridformtran As New gridformtran
-                        Dim tbs As New DataGridTableStyle
-                        Dim style As New DataGridTableStyle
-                        Dim cols As DataGridTextBoxColumn() = New DataGridTextBoxColumn(MaxColumns) {}
-                        Dim index As Integer = 0
-                        Do
-                            cols(index) = New DataGridTextBoxColumn
-                            If (Strings.InStr(modVoucher.tbcDetail(index).Format, "0", 0) > 0) Then
-                                cols(index).NullText = StringType.FromInteger(0)
-                            Else
-                                cols(index).NullText = ""
-                            End If
-                            index += 1
-                        Loop While (index <= MaxColumns - 1)
-                        frmAdd.Top = 0
-                        frmAdd.Left = 0
-                        frmAdd.Width = Me.Width
-                        frmAdd.Height = Me.Height
-                        frmAdd.Text = IIf(Reg.GetRegistryKey("Language").ToString.Trim = "V", "Hóa đơn", "VAT Invoice")
-                        frmAdd.StartPosition = FormStartPosition.CenterParent
-                        Dim panel As StatusBarPanel = AddStb(frmAdd)
-                        gridformtran2.CaptionVisible = False
-                        gridformtran2.ReadOnly = True
-                        gridformtran2.Top = 0
-                        gridformtran2.Left = 0
-                        gridformtran2.Height = CInt(Math.Round(CDbl((CDbl((Me.Height - SystemInformation.CaptionHeight)) / 2))))
-                        gridformtran2.Width = (Me.Width - 5)
-                        gridformtran2.Anchor = (AnchorStyles.Right Or (AnchorStyles.Left Or (AnchorStyles.Bottom Or AnchorStyles.Top)))
-                        gridformtran2.BackgroundColor = Color.White
-                        gridformtran.CaptionVisible = False
-                        gridformtran.ReadOnly = False
-                        gridformtran.Top = CInt(Math.Round(CDbl((CDbl((Me.Height - SystemInformation.CaptionHeight)) / 2))))
-                        gridformtran.Left = 0
-                        gridformtran.Height = CInt(Math.Round(CDbl(((CDbl((Me.Height - SystemInformation.CaptionHeight)) / 2) - 60))))
-                        gridformtran.Width = (Me.Width - 5)
-                        gridformtran.Anchor = (AnchorStyles.Right Or (AnchorStyles.Left Or AnchorStyles.Bottom))
-                        gridformtran.BackgroundColor = Color.White
-                        Dim button As New Button
-                        button.Visible = True
-                        button.Anchor = (AnchorStyles.Left Or AnchorStyles.Top)
-                        button.Left = (-100 - button.Width)
-                        frmAdd.Controls.Add(button)
-                        frmAdd.CancelButton = button
-                        frmAdd.Controls.Add(gridformtran2)
-                        frmAdd.Controls.Add(gridformtran)
-                        Fill2Grid.Fill(modVoucher.sysConn, (Me.tblRetrieveMaster), gridformtran2, (tbs), (cols), "SVMaster")
-                        index = 0
-                        Do
-                            If (Strings.InStr(modVoucher.tbcDetail(index).Format, "0", 0) > 0) Then
-                                cols(index).NullText = StringType.FromInteger(0)
-                            Else
-                                cols(index).NullText = ""
-                            End If
-                            index += 1
-                        Loop While (index <= MaxColumns - 1)
-                        cols(2).Alignment = HorizontalAlignment.Right
-                        Fill2Grid.Fill(modVoucher.sysConn, (Me.tblRetrieveDetail), gridformtran, (style), (cols), "SIDetail4DX4")
-                        index = 0
-                        Do
-                            If (Strings.InStr(modVoucher.tbcDetail(index).Format, "0", 0) > 0) Then
-                                cols(index).NullText = StringType.FromInteger(0)
-                            Else
-                                cols(index).NullText = ""
-                            End If
-                            index += 1
-                        Loop While (index <= MaxColumns - 1)
-                        Me.tblRetrieveDetail.AllowDelete = False
-                        Me.tblRetrieveDetail.AllowNew = False
-                        gridformtran.TableStyles.Item(0).GridColumnStyles.Item(0).ReadOnly = False
-                        index = 0
-                        Do While (1 <> 0)
-                            Try
-                                index += 1
-                                gridformtran.TableStyles.Item(0).GridColumnStyles.Item(index).ReadOnly = True
-                            Catch exception1 As Exception
-                                ProjectData.SetProjectError(exception1)
-                                Dim exception As Exception = exception1
-                                ProjectData.ClearProjectError()
-                                Exit Do
-                            End Try
-                        Loop
-                        Dim str5 As String = StringType.FromObject(oVoucher.oClassMsg.Item("016"))
-                        Dim count As Integer = Me.tblRetrieveMaster.Count
-                        panel.Text = str5
-                        AddHandler gridformtran2.CurrentCellChanged, New EventHandler(AddressOf Me.grdRetrieveMVCurrentCellChanged)
-                        gridformtran2.CurrentRowIndex = 0
-                        Dim num2 As Integer = 0
-                        Dim obj2 As Object = ObjectType.AddObj(ObjectType.AddObj("stt_rec = '", Me.tblRetrieveMaster.Item(num2).Item("stt_rec")), "'")
-                        Me.tblRetrieveDetail.RowFilter = StringType.FromObject(obj2)
-                        Obj.Init(frmAdd)
-                        Dim button4 As New RadioButton
-                        Dim button2 As New RadioButton
-                        Dim button3 As New RadioButton
-                        button4.Top = CInt(Math.Round(CDbl((((CDbl((Me.Height - 20)) / 2) + gridformtran.Height) + 5))))
-                        button4.Left = 0
-                        button4.Visible = True
-                        button4.Checked = True
-                        button4.Text = StringType.FromObject(modVoucher.oLan.Item("060"))
-                        button4.Width = 100
-                        button4.Anchor = (AnchorStyles.Left Or AnchorStyles.Bottom)
-                        button2.Top = button4.Top
-                        button2.Left = (button4.Left + 110)
-                        button2.Visible = True
-                        button2.Text = StringType.FromObject(modVoucher.oLan.Item("061"))
-                        button2.Width = 120
-                        button2.Anchor = (AnchorStyles.Left Or AnchorStyles.Bottom)
-                        button2.Enabled = False
-                        button3.Top = button4.Top
-                        button3.Left = (button2.Left + 130)
-                        button3.Visible = True
-                        button3.Text = StringType.FromObject(modVoucher.oLan.Item("062"))
-                        button3.Width = 200
-                        button3.Anchor = (AnchorStyles.Left Or AnchorStyles.Bottom)
-                        frmAdd.Controls.Add(button4)
-                        frmAdd.Controls.Add(button2)
-                        frmAdd.Controls.Add(button3)
-                        frmAdd.ShowDialog()
-                        If button4.Checked Then
-                            ds = Nothing
-                            Me.tblRetrieveMaster = Nothing
-                            Me.tblRetrieveDetail = Nothing
-                            Return
-                        End If
-                        Me.tblRetrieveDetail.Sort = "ngay_ct, so_ct, stt_rec, stt_rec0"
-                        Me.tblRetrieveDetail.RowFilter = "tag = 1"
-                        Dim flag As Boolean = (Me.tblRetrieveDetail.Count > 0)
-                        count = (modVoucher.tblDetail.Count - 1)
-                        If ((button3.Checked And flag) And (count >= 0)) Then
-                            index = count
-                            Do While (index >= 0)
-                                If Information.IsDBNull(RuntimeHelpers.GetObjectValue(modVoucher.tblDetail.Item(index).Item("stt_rec"))) Then
-                                    modVoucher.tblDetail.Item(index).Delete()
-                                ElseIf (StringType.StrCmp(oVoucher.cAction, "Edit", False) = 0) Then
-                                    If (StringType.StrCmp(Strings.Trim(StringType.FromObject(modVoucher.tblDetail.Item(index).Item("stt_rec"))), "", False) = 0) Then
-                                        modVoucher.tblDetail.Item(index).Delete()
-                                    End If
-                                    If (ObjectType.ObjTst(Strings.Trim(StringType.FromObject(modVoucher.tblDetail.Item(index).Item("stt_rec"))), modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec"), False) = 0) Then
-                                        modVoucher.tblDetail.Item(index).Delete()
-                                    End If
-                                ElseIf Information.IsDBNull(RuntimeHelpers.GetObjectValue(modVoucher.tblDetail.Item(index).Item("stt_rec"))) Then
-                                    modVoucher.tblDetail.Item(index).Delete()
-                                ElseIf (StringType.StrCmp(Strings.Trim(StringType.FromObject(modVoucher.tblDetail.Item(index).Item("stt_rec"))), "", False) = 0) Then
-                                    modVoucher.tblDetail.Item(index).Delete()
-                                End If
-                                index = (index + -1)
-                            Loop
-                        End If
-                        Dim tbl As New DataTable
-                        tbl = Copy2Table(Me.tblRetrieveDetail)
-                        Dim num6 As Integer = (tbl.Rows.Count - 1)
-                        index = 0
-                        Do While (index <= num6)
-                            With tbl.Rows.Item(index)
-                                If (StringType.StrCmp(oVoucher.cAction, "New", False) = 0) Then
-                                    .Item("stt_rec") = ""
-                                Else
-                                    .Item("stt_rec") = RuntimeHelpers.GetObjectValue(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec"))
-                                End If
-                                tbl.Rows.Item(index).AcceptChanges()
-                            End With
-                            index += 1
-                        Loop
-                        AppendFrom(modVoucher.tblDetail, tbl)
-                        count = modVoucher.tblDetail.Count
-                        If flag Then
-                            index = (count - 1)
-                            Do While (index >= 0)
-                                If clsfields.isEmpty(RuntimeHelpers.GetObjectValue(modVoucher.tblDetail.Item(index).Item("ma_vt")), "C") Then
-                                    modVoucher.tblDetail.Item(index).Delete()
-                                ElseIf Not clsfields.isEmpty(RuntimeHelpers.GetObjectValue(modVoucher.tblDetail.Item(index).Item("stt_rec_hd")), "C") Then
-                                    modVoucher.tblDetail.Item(index).Item("stt_rec0") = Me.GetIDItem(modVoucher.tblDetail, "0")
-                                End If
-                                index = (index + -1)
-                            Loop
-                            Me.UpdateList()
-                        End If
-                        frmAdd.Dispose()
-                    End If
-                    ds = Nothing
-                    Me.tblRetrieveMaster = Nothing
-                    Me.tblRetrieveDetail = Nothing
-                End If
-            End If
-        End If
-    End Sub
+
     Private Sub grdRetrieveMVCurrentCellChanged(ByVal sender As Object, ByVal e As EventArgs)
         Dim num As Integer = IntegerType.FromObject(LateBinding.LateGet(LateBinding.LateGet(sender, Nothing, "CurrentCell", New Object(0 - 1) {}, Nothing, Nothing), Nothing, "RowNumber", New Object(0 - 1) {}, Nothing, Nothing))
         Dim obj2 As Object = ObjectType.AddObj(ObjectType.AddObj("stt_rec = '", Me.tblRetrieveMaster.Item(num).Item("stt_rec")), "'")
         Me.tblRetrieveDetail.RowFilter = StringType.FromObject(obj2)
     End Sub
+
+    Private Sub HandleBoolChanges(ByVal sender As Object, ByVal e As BoolValueChangedEventArgs)
+        Select Case e.Column
+            Case 0
+                Dim i As Integer
+                For i = 0 To tblRetrieveDetail.Count - 1
+                    tblRetrieveDetail.Item(i).Item("tag") = e.BoolValue
+                    tblRetrieveDetail.Item(i).Row().AcceptChanges()
+                Next
+                Exit Select
+        End Select
+    End Sub
+    Private Sub HandleBoolChanges_Detail(ByVal sender As Object, ByVal e As BoolValueChangedEventArgs)
+        Select Case e.Column
+            Case 0
+                tblRetrieveDetail.Item(gridSeachDetail.CurrentRowIndex).Item("tag") = e.BoolValue
+                tblRetrieveDetail.Item(gridSeachDetail.CurrentRowIndex).Row.AcceptChanges()
+                Exit Select
+        End Select
+    End Sub
+
     ' Properties
     Friend WithEvents cboAction As ComboBox
     Friend WithEvents cboStatus As ComboBox
@@ -2479,7 +2262,7 @@ Public Class frmVoucher
     Friend WithEvents txtMa_kh As TextBox
     Friend WithEvents txtNgay_ct As txtDate
     Friend WithEvents txtNgay_lct As txtDate
-    Friend WithEvents txtFnote1 As TextBox
+    Friend WithEvents txtFcode3 As TextBox
     Friend WithEvents txtSo_ct As TextBox
     Friend WithEvents txtStatus As TextBox
     Friend WithEvents txtT_so_luong As txtNumeric
@@ -2492,13 +2275,13 @@ Public Class frmVoucher
     Private cOldSite As String
     Private cOldTransportType As String
     Private colDvt As DataGridTextBoxColumn
-    Private colMa_kho As DataGridTextBoxColumn
+    'Private colMa_kho As DataGridTextBoxColumn
     Private colMa_lo As DataGridTextBoxColumn
-    Private colMa_vi_tri As DataGridTextBoxColumn
+    'Private colMa_vi_tri As DataGridTextBoxColumn
     Private colMa_vt As DataGridTextBoxColumn
-    Private colSi_line As DataGridTextBoxColumn
+    Private colPK_line As DataGridTextBoxColumn
     Private colSo_luong As DataGridTextBoxColumn
-    Private colSo_px As DataGridTextBoxColumn
+    Private colSo_PK As DataGridTextBoxColumn
     Private colTen_vt As DataGridTextBoxColumn
     Private components As IContainer
     Private grdHeader As grdHeader
@@ -2512,10 +2295,8 @@ Public Class frmVoucher
     Private noldSo_luong As Decimal
     Private oInvItemDetail As VoucherLibObj
     Private oldtblDetail As DataTable
-    Private oLocation As VoucherKeyLibObj
     Private oLot As VoucherKeyLibObj
     Private oSecurity As clssecurity
-    Private oSite As VoucherKeyLibObj
     'Private oTitleButton As TitleButton
     Private oUOM As VoucherKeyCheckLibObj
     Public oVoucher As clsvoucher.clsVoucher
@@ -2524,8 +2305,13 @@ Public Class frmVoucher
     Private tblRetrieveDetail As DataView
     Private tblRetrieveMaster As DataView
     Private tblStatus As DataTable
-    Friend WithEvents txtNgay_lo As txtDate
     Friend WithEvents Label1 As Label
-    Private xInventory As clsInventory
+    Friend WithEvents txtSo_lo As TextBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents txtFcode1 As TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents txtFcode2 As TextBox
+    Dim gridSeachDetail As gridformtran
+    'Private xInventory As clsInventory
 End Class
 
