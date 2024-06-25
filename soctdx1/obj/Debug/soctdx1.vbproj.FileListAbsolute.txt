@@ -1,0 +1,12 @@
+D:\BinCus\Endo\soctdx1.exe
+D:\BinCus\Endo\soctdx1.pdb
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.vbprojAssemblyReference.cache
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.frmDate.resources
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.frmPrint.resources
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.frmSearch.resources
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.frmVoucher.resources
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.vbproj.GenerateResource.cache
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.vbproj.CoreCompileInputs.cache
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.vbproj.CopyComplete
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.exe
+D:\VS\Custom\Endo\soctdx1\obj\Debug\soctdx1.pdb

@@ -1,0 +1,9 @@
+D:\BinCus\Endo\insd320.exe
+D:\BinCus\Endo\insd320.pdb
+D:\VS\Custom\Endo\insd320\obj\Debug\insd320.vbprojAssemblyReference.cache
+D:\VS\Custom\Endo\insd320\obj\Debug\frmFilter.resources
+D:\VS\Custom\Endo\insd320\obj\Debug\insd320.vbproj.GenerateResource.cache
+D:\VS\Custom\Endo\insd320\obj\Debug\insd320.vbproj.CoreCompileInputs.cache
+D:\VS\Custom\Endo\insd320\obj\Debug\insd320.vbproj.CopyComplete
+D:\VS\Custom\Endo\insd320\obj\Debug\insd320.exe
+D:\VS\Custom\Endo\insd320\obj\Debug\insd320.pdb

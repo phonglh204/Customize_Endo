@@ -1,0 +1,12 @@
+D:\BinCus\Endo\poctpnb.exe
+D:\BinCus\Endo\poctpnb.pdb
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.vbprojAssemblyReference.cache
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.frmDate.resources
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.frmPrint.resources
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.frmSearch.resources
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.frmVoucher.resources
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.vbproj.GenerateResource.cache
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.vbproj.CoreCompileInputs.cache
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.vbproj.CopyComplete
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.exe
+D:\VS\Custom\Endo\poctpnb\obj\Debug\poctpnb.pdb

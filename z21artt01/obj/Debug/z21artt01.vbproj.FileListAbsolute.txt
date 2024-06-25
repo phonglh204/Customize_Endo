@@ -1,0 +1,4 @@
+D:\VS\Custom\Endo\z21artt01\obj\Debug\z21artt01.vbprojAssemblyReference.cache
+D:\VS\Custom\Endo\z21artt01\obj\Debug\z21artt01.frmFilter.resources
+D:\VS\Custom\Endo\z21artt01\obj\Debug\z21artt01.vbproj.GenerateResource.cache
+D:\VS\Custom\Endo\z21artt01\obj\Debug\z21artt01.vbproj.CoreCompileInputs.cache

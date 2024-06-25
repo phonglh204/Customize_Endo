@@ -1,0 +1,13 @@
+D:\BinCus\Endo\inctpxa.exe
+D:\BinCus\Endo\inctpxa.pdb
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.vbprojAssemblyReference.cache
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.frmCopy.resources
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.frmDate.resources
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.frmPrint.resources
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.frmSearch.resources
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.frmVoucher.resources
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.vbproj.GenerateResource.cache
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.vbproj.CoreCompileInputs.cache
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.vbproj.CopyComplete
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.exe
+D:\VS\Custom\Endo\inctpxa\obj\Debug\inctpxa.pdb
