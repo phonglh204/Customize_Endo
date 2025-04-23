@@ -281,6 +281,10 @@ Public Class frmVoucher
             ProjectData.SetProjectError(exception1)
             ProjectData.ClearProjectError()
         End Try
+        Try
+            GetColumn(grdDetail, "ma_vt2").TextBox.Enabled = False
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub EDTBColumns(ByVal lED As Boolean)
@@ -1911,6 +1915,10 @@ Public Class frmVoucher
                 view.Item("ma_lo") = str5
             End If
         End If
+        Try
+            view.Item("ma_vt2") = row.Item("ma_vt2")
+        Catch ex As Exception
+        End Try
         view = Nothing
     End Sub
 

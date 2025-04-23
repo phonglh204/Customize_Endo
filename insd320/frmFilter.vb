@@ -104,6 +104,10 @@ Public Class frmFilter
         reportformlib.grdOrderDataview = Me.grdOrder.dvGrid
         reportformlib.grdSelectDataview = DirMain.oAdvFilter.GetDataview
         DirMain.oxInv = New xInv(Me.tabReports, Me.pnContent, DirMain.appConn, DirMain.sysConn)
+        If DirMain.oOption.Item("doclapsolieu") = 1 Then
+            Me.txtMa_dvcs.Text = Reg.GetRegistryKey("DFUnit").ToString.Trim
+            Me.txtMa_dvcs.Enabled = False
+        End If
     End Sub
 
     <DebuggerStepThrough()> _

@@ -1849,7 +1849,7 @@ Public Class frmVoucher
         Me.cmdSave.BackColor = System.Drawing.Color.Transparent
         Me.cmdSave.Location = New System.Drawing.Point(24, 456)
         Me.cmdSave.Name = "cmdSave"
-        Me.cmdSave.Size = New System.Drawing.Size(60, 23)
+        Me.cmdSave.Size = New System.Drawing.Size(60, 24)
         Me.cmdSave.TabIndex = 28
         Me.cmdSave.Tag = "CB01"
         Me.cmdSave.Text = "Luu"
@@ -1861,7 +1861,7 @@ Public Class frmVoucher
         Me.cmdNew.BackColor = System.Drawing.Color.Transparent
         Me.cmdNew.Location = New System.Drawing.Point(84, 456)
         Me.cmdNew.Name = "cmdNew"
-        Me.cmdNew.Size = New System.Drawing.Size(60, 23)
+        Me.cmdNew.Size = New System.Drawing.Size(60, 24)
         Me.cmdNew.TabIndex = 29
         Me.cmdNew.Tag = "CB02"
         Me.cmdNew.Text = "Moi"
@@ -1873,7 +1873,7 @@ Public Class frmVoucher
         Me.cmdPrint.BackColor = System.Drawing.Color.Transparent
         Me.cmdPrint.Location = New System.Drawing.Point(144, 456)
         Me.cmdPrint.Name = "cmdPrint"
-        Me.cmdPrint.Size = New System.Drawing.Size(60, 23)
+        Me.cmdPrint.Size = New System.Drawing.Size(60, 24)
         Me.cmdPrint.TabIndex = 30
         Me.cmdPrint.Tag = "CB03"
         Me.cmdPrint.Text = "In ctu"
@@ -1885,7 +1885,7 @@ Public Class frmVoucher
         Me.cmdEdit.BackColor = System.Drawing.Color.Transparent
         Me.cmdEdit.Location = New System.Drawing.Point(204, 456)
         Me.cmdEdit.Name = "cmdEdit"
-        Me.cmdEdit.Size = New System.Drawing.Size(60, 23)
+        Me.cmdEdit.Size = New System.Drawing.Size(60, 24)
         Me.cmdEdit.TabIndex = 31
         Me.cmdEdit.Tag = "CB04"
         Me.cmdEdit.Text = "Sua"
@@ -1897,7 +1897,7 @@ Public Class frmVoucher
         Me.cmdDelete.BackColor = System.Drawing.Color.Transparent
         Me.cmdDelete.Location = New System.Drawing.Point(264, 456)
         Me.cmdDelete.Name = "cmdDelete"
-        Me.cmdDelete.Size = New System.Drawing.Size(60, 23)
+        Me.cmdDelete.Size = New System.Drawing.Size(60, 24)
         Me.cmdDelete.TabIndex = 32
         Me.cmdDelete.Tag = "CB05"
         Me.cmdDelete.Text = "Xoa"
@@ -1909,7 +1909,7 @@ Public Class frmVoucher
         Me.cmdView.BackColor = System.Drawing.Color.Transparent
         Me.cmdView.Location = New System.Drawing.Point(324, 456)
         Me.cmdView.Name = "cmdView"
-        Me.cmdView.Size = New System.Drawing.Size(60, 23)
+        Me.cmdView.Size = New System.Drawing.Size(60, 24)
         Me.cmdView.TabIndex = 33
         Me.cmdView.Tag = "CB06"
         Me.cmdView.Text = "Xem"
@@ -1921,7 +1921,7 @@ Public Class frmVoucher
         Me.cmdSearch.BackColor = System.Drawing.Color.Transparent
         Me.cmdSearch.Location = New System.Drawing.Point(384, 456)
         Me.cmdSearch.Name = "cmdSearch"
-        Me.cmdSearch.Size = New System.Drawing.Size(60, 23)
+        Me.cmdSearch.Size = New System.Drawing.Size(60, 24)
         Me.cmdSearch.TabIndex = 34
         Me.cmdSearch.Tag = "CB07"
         Me.cmdSearch.Text = "Tim"
@@ -1933,7 +1933,7 @@ Public Class frmVoucher
         Me.cmdClose.BackColor = System.Drawing.Color.Transparent
         Me.cmdClose.Location = New System.Drawing.Point(444, 456)
         Me.cmdClose.Name = "cmdClose"
-        Me.cmdClose.Size = New System.Drawing.Size(60, 23)
+        Me.cmdClose.Size = New System.Drawing.Size(60, 24)
         Me.cmdClose.TabIndex = 35
         Me.cmdClose.Tag = "CB08"
         Me.cmdClose.Text = "Quay ra"
@@ -1945,7 +1945,7 @@ Public Class frmVoucher
         Me.cmdOption.BackColor = System.Drawing.Color.Transparent
         Me.cmdOption.Location = New System.Drawing.Point(560, 456)
         Me.cmdOption.Name = "cmdOption"
-        Me.cmdOption.Size = New System.Drawing.Size(20, 23)
+        Me.cmdOption.Size = New System.Drawing.Size(20, 24)
         Me.cmdOption.TabIndex = 36
         Me.cmdOption.TabStop = False
         Me.cmdOption.Tag = "CB09"
@@ -1957,7 +1957,7 @@ Public Class frmVoucher
         Me.cmdTop.BackColor = System.Drawing.Color.Transparent
         Me.cmdTop.Location = New System.Drawing.Point(580, 456)
         Me.cmdTop.Name = "cmdTop"
-        Me.cmdTop.Size = New System.Drawing.Size(20, 23)
+        Me.cmdTop.Size = New System.Drawing.Size(20, 24)
         Me.cmdTop.TabIndex = 37
         Me.cmdTop.TabStop = False
         Me.cmdTop.Tag = "CB10"
@@ -1969,7 +1969,7 @@ Public Class frmVoucher
         Me.cmdPrev.BackColor = System.Drawing.Color.Transparent
         Me.cmdPrev.Location = New System.Drawing.Point(600, 456)
         Me.cmdPrev.Name = "cmdPrev"
-        Me.cmdPrev.Size = New System.Drawing.Size(20, 23)
+        Me.cmdPrev.Size = New System.Drawing.Size(20, 24)
         Me.cmdPrev.TabIndex = 38
         Me.cmdPrev.TabStop = False
         Me.cmdPrev.Tag = "CB11"
@@ -1981,7 +1981,7 @@ Public Class frmVoucher
         Me.cmdNext.BackColor = System.Drawing.Color.Transparent
         Me.cmdNext.Location = New System.Drawing.Point(620, 456)
         Me.cmdNext.Name = "cmdNext"
-        Me.cmdNext.Size = New System.Drawing.Size(20, 23)
+        Me.cmdNext.Size = New System.Drawing.Size(20, 24)
         Me.cmdNext.TabIndex = 39
         Me.cmdNext.TabStop = False
         Me.cmdNext.Tag = "CB12"
@@ -1993,7 +1993,7 @@ Public Class frmVoucher
         Me.cmdBottom.BackColor = System.Drawing.Color.Transparent
         Me.cmdBottom.Location = New System.Drawing.Point(640, 456)
         Me.cmdBottom.Name = "cmdBottom"
-        Me.cmdBottom.Size = New System.Drawing.Size(20, 23)
+        Me.cmdBottom.Size = New System.Drawing.Size(20, 24)
         Me.cmdBottom.TabIndex = 40
         Me.cmdBottom.TabStop = False
         Me.cmdBottom.Tag = "CB13"
@@ -2241,7 +2241,7 @@ Public Class frmVoucher
         Me.tbgOther.Controls.Add(Me.txtTk_ck)
         Me.tbgOther.Location = New System.Drawing.Point(4, 22)
         Me.tbgOther.Name = "tbgOther"
-        Me.tbgOther.Size = New System.Drawing.Size(640, 187)
+        Me.tbgOther.Size = New System.Drawing.Size(528, 120)
         Me.tbgOther.TabIndex = 3
         Me.tbgOther.Tag = "L015"
         Me.tbgOther.Text = "Thong tin khac"
@@ -2748,7 +2748,7 @@ Public Class frmVoucher
         Me.txtT_tien2.Enabled = False
         Me.txtT_tien2.ForeColor = System.Drawing.Color.Black
         Me.txtT_tien2.Format = "m_ip_tien"
-        Me.txtT_tien2.Location = New System.Drawing.Point(560, 387)
+        Me.txtT_tien2.Location = New System.Drawing.Point(560, 388)
         Me.txtT_tien2.MaxLength = 10
         Me.txtT_tien2.Name = "txtT_tien2"
         Me.txtT_tien2.Size = New System.Drawing.Size(100, 20)
@@ -2765,7 +2765,7 @@ Public Class frmVoucher
         Me.txtT_tien_nt2.Enabled = False
         Me.txtT_tien_nt2.ForeColor = System.Drawing.Color.Black
         Me.txtT_tien_nt2.Format = "m_ip_tien_nt"
-        Me.txtT_tien_nt2.Location = New System.Drawing.Point(456, 387)
+        Me.txtT_tien_nt2.Location = New System.Drawing.Point(456, 388)
         Me.txtT_tien_nt2.MaxLength = 13
         Me.txtT_tien_nt2.Name = "txtT_tien_nt2"
         Me.txtT_tien_nt2.Size = New System.Drawing.Size(100, 20)
@@ -2971,7 +2971,7 @@ Public Class frmVoucher
         Me.txtT_so_luong.Enabled = False
         Me.txtT_so_luong.ForeColor = System.Drawing.Color.Black
         Me.txtT_so_luong.Format = "m_ip_sl"
-        Me.txtT_so_luong.Location = New System.Drawing.Point(352, 387)
+        Me.txtT_so_luong.Location = New System.Drawing.Point(352, 388)
         Me.txtT_so_luong.MaxLength = 8
         Me.txtT_so_luong.Name = "txtT_so_luong"
         Me.txtT_so_luong.Size = New System.Drawing.Size(100, 20)
@@ -3239,7 +3239,7 @@ Public Class frmVoucher
         Me.txtMa_thue.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.txtMa_thue.BackColor = System.Drawing.Color.White
         Me.txtMa_thue.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_thue.Location = New System.Drawing.Point(112, 387)
+        Me.txtMa_thue.Location = New System.Drawing.Point(112, 388)
         Me.txtMa_thue.Name = "txtMa_thue"
         Me.txtMa_thue.Size = New System.Drawing.Size(30, 20)
         Me.txtMa_thue.TabIndex = 20
@@ -3267,7 +3267,7 @@ Public Class frmVoucher
         Me.txtThue_suat.Location = New System.Drawing.Point(-248, 484)
         Me.txtThue_suat.MaxLength = 8
         Me.txtThue_suat.Name = "txtThue_suat"
-        Me.txtThue_suat.Size = New System.Drawing.Size(46, 20)
+        Me.txtThue_suat.Size = New System.Drawing.Size(47, 20)
         Me.txtThue_suat.TabIndex = 129
         Me.txtThue_suat.Tag = "FN"
         Me.txtThue_suat.Text = "m_ip_sl"
@@ -3317,7 +3317,7 @@ Public Class frmVoucher
         Me.txtsl_in.Enabled = False
         Me.txtsl_in.ForeColor = System.Drawing.Color.Black
         Me.txtsl_in.Format = "m_ip_sl"
-        Me.txtsl_in.Location = New System.Drawing.Point(-312, 480)
+        Me.txtsl_in.Location = New System.Drawing.Point(-311, 480)
         Me.txtsl_in.MaxLength = 8
         Me.txtsl_in.Name = "txtsl_in"
         Me.txtsl_in.Size = New System.Drawing.Size(46, 20)
