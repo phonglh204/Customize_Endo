@@ -387,7 +387,7 @@ Public Class frmVoucher
         Dim monumber As New monumber(GetColumn(Me.grdDetail, "so_lsx"))
         Dim oCustomer As New DirLib(Me.txtMa_kh, Me.lblTen_kh, modVoucher.sysConn, modVoucher.appConn, "dmkh", "ma_kh", "ten_kh", "Customer", sKey, False, Me.cmdEdit)
         AddHandler Me.txtMa_kh.Validated, New EventHandler(AddressOf Me.txtMa_kh_valid)
-        Dim clscustomerref As New clscustomerref(modVoucher.appConn, Me.txtMa_kh, Me.txtFcode3, modVoucher.VoucherCode, Me.oVoucher)
+        'Dim clscustomerref As New clscustomerref(modVoucher.appConn, Me.txtMa_kh, Me.txtFcode3, modVoucher.VoucherCode, Me.oVoucher)
         Me.oInvItemDetail = New VoucherLibObj(Me.colMa_vt, "ten_vt", modVoucher.sysConn, modVoucher.appConn, "dmvt", "ma_vt", "ten_vt", "Item", "1=1", modVoucher.tblDetail, Me.pnContent, True, Me.cmdEdit)
         VoucherLibObj.oClassMsg = oVoucher.oClassMsg
         Me.oInvItemDetail.Colkey = True
