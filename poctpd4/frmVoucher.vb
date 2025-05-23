@@ -610,7 +610,6 @@ Public Class frmVoucher
         Me.lblDien_giai = New System.Windows.Forms.Label()
         Me.txtT_so_luong = New libscontrol.txtNumeric()
         Me.txtLoai_ct = New System.Windows.Forms.TextBox()
-        Me.txtFcode3 = New System.Windows.Forms.TextBox()
         Me.lblOng_ba = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtSo_lo = New System.Windows.Forms.TextBox()
@@ -618,6 +617,7 @@ Public Class frmVoucher
         Me.txtFcode1 = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtFcode2 = New System.Windows.Forms.TextBox()
+        Me.txtFdate1 = New libscontrol.txtDate()
         Me.tbDetail.SuspendLayout()
         Me.tpgDetail.SuspendLayout()
         CType(Me.grdDetail, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1161,35 +1161,25 @@ Public Class frmVoucher
         Me.txtLoai_ct.Text = "TXTLOAI_CT"
         Me.txtLoai_ct.Visible = False
         '
-        'txtFcode3
-        '
-        Me.txtFcode3.BackColor = System.Drawing.Color.White
-        Me.txtFcode3.Location = New System.Drawing.Point(384, 79)
-        Me.txtFcode3.Name = "txtFcode3"
-        Me.txtFcode3.Size = New System.Drawing.Size(168, 22)
-        Me.txtFcode3.TabIndex = 5
-        Me.txtFcode3.Tag = "FCCF"
-        Me.txtFcode3.Text = "txtFcode3"
-        '
         'lblOng_ba
         '
         Me.lblOng_ba.AutoSize = True
         Me.lblOng_ba.Location = New System.Drawing.Point(280, 82)
         Me.lblOng_ba.Name = "lblOng_ba"
-        Me.lblOng_ba.Size = New System.Drawing.Size(31, 17)
+        Me.lblOng_ba.Size = New System.Drawing.Size(80, 17)
         Me.lblOng_ba.TabIndex = 119
         Me.lblOng_ba.Tag = "L019"
-        Me.lblOng_ba.Text = "Job"
+        Me.lblOng_ba.Text = "Ngay ho so"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(2, 82)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(46, 17)
+        Me.Label1.Size = New System.Drawing.Size(64, 17)
         Me.Label1.TabIndex = 121
         Me.Label1.Tag = "L018"
-        Me.Label1.Text = "So bill"
+        Me.Label1.Text = "So ho so"
         '
         'txtSo_lo
         '
@@ -1241,10 +1231,24 @@ Public Class frmVoucher
         Me.txtFcode2.Tag = "FCCF"
         Me.txtFcode2.Text = "txtFcode2"
         '
+        'txtFdate1
+        '
+        Me.txtFdate1.BackColor = System.Drawing.Color.White
+        Me.txtFdate1.Location = New System.Drawing.Point(386, 83)
+        Me.txtFdate1.MaxLength = 10
+        Me.txtFdate1.Name = "txtFdate1"
+        Me.txtFdate1.Size = New System.Drawing.Size(166, 22)
+        Me.txtFdate1.TabIndex = 5
+        Me.txtFdate1.Tag = "FD"
+        Me.txtFdate1.Text = "  /  /    "
+        Me.txtFdate1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtFdate1.Value = New Date(CType(0, Long))
+        '
         'frmVoucher
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
         Me.ClientSize = New System.Drawing.Size(871, 545)
+        Me.Controls.Add(Me.txtFdate1)
         Me.Controls.Add(Me.txtFcode2)
         Me.Controls.Add(Me.txtFcode1)
         Me.Controls.Add(Me.Label3)
@@ -1253,7 +1257,6 @@ Public Class frmVoucher
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lblMa_dvcs)
         Me.Controls.Add(Me.lblStatusMess)
-        Me.Controls.Add(Me.txtFcode3)
         Me.Controls.Add(Me.lblOng_ba)
         Me.Controls.Add(Me.txtLoai_ct)
         Me.Controls.Add(Me.txtT_so_luong)
@@ -2270,7 +2273,6 @@ Public Class frmVoucher
     Friend WithEvents txtMa_kh As TextBox
     Friend WithEvents txtNgay_ct As txtDate
     Friend WithEvents txtNgay_lct As txtDate
-    Friend WithEvents txtFcode3 As TextBox
     Friend WithEvents txtSo_ct As TextBox
     Friend WithEvents txtStatus As TextBox
     Friend WithEvents txtT_so_luong As txtNumeric
@@ -2319,6 +2321,7 @@ Public Class frmVoucher
     Friend WithEvents txtFcode1 As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents txtFcode2 As TextBox
+    Friend WithEvents txtFdate1 As txtDate
     Dim gridSeachDetail As gridformtran
     'Private xInventory As clsInventory
 End Class
