@@ -1,0 +1,13 @@
+C:\BinCus\Endo\vcPD5.exe
+C:\BinCus\Endo\vcPD5.pdb
+C:\VS\Custom\Endo\vcPD5\obj\Debug\vcPD5.vbproj.AssemblyReference.cache
+C:\VS\Custom\Endo\vcPD5\obj\Debug\frmCopy.resources
+C:\VS\Custom\Endo\vcPD5\obj\Debug\frmDate.resources
+C:\VS\Custom\Endo\vcPD5\obj\Debug\frmPrint.resources
+C:\VS\Custom\Endo\vcPD5\obj\Debug\frmSearch.resources
+C:\VS\Custom\Endo\vcPD5\obj\Debug\frmVoucher.resources
+C:\VS\Custom\Endo\vcPD5\obj\Debug\vcPD5.vbproj.GenerateResource.cache
+C:\VS\Custom\Endo\vcPD5\obj\Debug\vcPD5.vbproj.CoreCompileInputs.cache
+C:\VS\Custom\Endo\vcPD5\obj\Debug\vcPD5.vbproj.CopyComplete
+C:\VS\Custom\Endo\vcPD5\obj\Debug\vcPD5.exe
+C:\VS\Custom\Endo\vcPD5\obj\Debug\vcPD5.pdb

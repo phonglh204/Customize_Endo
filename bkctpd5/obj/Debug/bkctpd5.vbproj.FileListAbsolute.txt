@@ -1,0 +1,10 @@
+C:\Bincus\Endo\bkctpd5.exe.config
+C:\Bincus\Endo\bkctpd5.exe
+C:\Bincus\Endo\bkctpd5.pdb
+C:\VS\Custom\Endo\bkctpd5\obj\Debug\bkctpd5.vbproj.AssemblyReference.cache
+C:\VS\Custom\Endo\bkctpd5\obj\Debug\z16pobk_ct.frmFilter.resources
+C:\VS\Custom\Endo\bkctpd5\obj\Debug\bkctpd5.vbproj.GenerateResource.cache
+C:\VS\Custom\Endo\bkctpd5\obj\Debug\bkctpd5.vbproj.CoreCompileInputs.cache
+C:\VS\Custom\Endo\bkctpd5\obj\Debug\bkctpd5.vbproj.CopyComplete
+C:\VS\Custom\Endo\bkctpd5\obj\Debug\bkctpd5.exe
+C:\VS\Custom\Endo\bkctpd5\obj\Debug\bkctpd5.pdb

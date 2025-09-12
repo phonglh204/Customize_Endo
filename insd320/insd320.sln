@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "insd320", "insd320.vbproj", "{62DEDFE2-FAB9-4BC6-8625-1C5C5D498DA5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62DEDFE2-FAB9-4BC6-8625-1C5C5D498DA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62DEDFE2-FAB9-4BC6-8625-1C5C5D498DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62DEDFE2-FAB9-4BC6-8625-1C5C5D498DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62DEDFE2-FAB9-4BC6-8625-1C5C5D498DA5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {62CD3208-A097-443F-B488-F3AF185B34EA}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://phonglh.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = insd320.vbproj
+		SccLocalPath1 = .
+	EndGlobalSection
+EndGlobal
