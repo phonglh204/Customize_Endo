@@ -53,7 +53,7 @@ Public Class frmSearch
             If ((Strings.InStr(StringType.FromObject(Me.Controls.Item(num2).Tag), "Master", 0) > 0) Or (Strings.InStr(StringType.FromObject(Me.Controls.Item(num2).Tag), "Detail", 0) > 0)) Then
                 flag = False
                 str2 = Fox.GetWordNum(StringType.FromObject(Me.Controls.Item(num2).Tag), 2, "#"c)
-                If (Strings.InStr(Me.Controls.Item(num2).GetType.ToString.ToLower, "slib.txtnumeric", 0) > 0) Then
+                If Me.Controls.Item(num2).GetType Is GetType(txtNumeric) Then
                     Dim numeric As txtNumeric = DirectCast(Me.Controls.Item(num2), txtNumeric)
                     If (numeric.Value <> 0) Then
                         str2 = Strings.Replace(str2, "%n", StringType.FromObject(Sql.ConvertVS2SQLType(numeric.Value, "")), 1, -1, 0)
@@ -62,7 +62,7 @@ Public Class frmSearch
                     End If
                     flag = True
                 End If
-                If (Strings.InStr(Me.Controls.Item(num2).GetType.ToString.ToLower, "slib.txtdate", 0) > 0) Then
+                If Me.Controls.Item(num2).GetType Is GetType(txtDate) Then
                     Dim txt As txtDate = DirectCast(Me.Controls.Item(num2), txtDate)
                     If (ObjectType.ObjTst(txt.Text, Fox.GetEmptyDate, False) <> 0) Then
                         str2 = Strings.Replace(str2, "%d", StringType.FromObject(Sql.ConvertVS2SQLType(txt.Value, "")), 1, -1, 0)
@@ -110,7 +110,7 @@ Public Class frmSearch
                 If ((Strings.InStr(StringType.FromObject(Me.tabFilter.TabPages.Item(i).Controls.Item(num2).Tag), "Master", 0) > 0) Or (Strings.InStr(StringType.FromObject(Me.tabFilter.TabPages.Item(i).Controls.Item(num2).Tag), "Detail", 0) > 0)) Then
                     flag = False
                     str2 = Fox.GetWordNum(StringType.FromObject(Me.tabFilter.TabPages.Item(i).Controls.Item(num2).Tag), 2, "#"c)
-                    If (Strings.InStr(Me.tabFilter.TabPages.Item(i).Controls.Item(num2).GetType.ToString.ToLower, "slib.txtnumeric", 0) > 0) Then
+                    If Me.tabFilter.TabPages.Item(i).Controls.Item(num2).GetType Is GetType(txtNumeric) Then
                         Dim numeric2 As txtNumeric = DirectCast(Me.tabFilter.TabPages.Item(i).Controls.Item(num2), txtNumeric)
                         If (numeric2.Value <> 0) Then
                             str2 = Strings.Replace(str2, "%n", StringType.FromObject(Sql.ConvertVS2SQLType(numeric2.Value, "")), 1, -1, 0)
@@ -119,7 +119,7 @@ Public Class frmSearch
                         End If
                         flag = True
                     End If
-                    If (Strings.InStr(Me.tabFilter.TabPages.Item(i).Controls.Item(num2).GetType.ToString.ToLower, "slib.txtdate", 0) > 0) Then
+                    If Me.tabFilter.TabPages.Item(i).Controls.Item(num2).GetType Is GetType(txtDate) Then
                         Dim date2 As txtDate = DirectCast(Me.tabFilter.TabPages.Item(i).Controls.Item(num2), txtDate)
                         If (ObjectType.ObjTst(date2.Text, Fox.GetEmptyDate, False) <> 0) Then
                             str2 = Strings.Replace(str2, "%d", StringType.FromObject(Sql.ConvertVS2SQLType(date2.Value, "")), 1, -1, 0)
@@ -160,7 +160,11 @@ Public Class frmSearch
             Loop
             i += 1
         Loop
+        If Me.txtMa_vt2.Text.Trim <> "" Then
+            str += " AND ma_vt in (select ma_vt from dmvt where ma_vt2 = " + Sql.ConvertVS2SQLType(Me.txtMa_vt2.Text.Trim, "") + ")"
+        End If
         Dim tcSQL As String = (StringType.FromObject(ObjectType.AddObj(String.Concat(New String() {"EXEC spSearchPD4Tran '", modVoucher.cLan, "', ", vouchersearchlibobj.ConvertLong2ShortStrings(strSQLLong, 10), ", ", vouchersearchlibobj.ConvertLong2ShortStrings(str, 10), ", '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), "'"}), ObjectType.AddObj(ObjectType.AddObj(", '", Reg.GetRegistryKey("SysData")), "'"))) & frmMain.oVoucher.GetSearchParameters())
+
         Dim ds As New DataSet
         Sql.SQLDecompressRetrieve((modVoucher.appConn), tcSQL, "trantmp", (ds))
         If (ds.Tables.Item(0).Rows.Count > 0) Then
@@ -232,6 +236,8 @@ Public Class frmSearch
         Dim vouchersearchlibobj4 As New vouchersearchlibobj(Me.txtMa_td3, Me.lblTen_td3, modVoucher.sysConn, modVoucher.appConn, "dmtd3", "ma_td", "ten_td", "Free3", "1=1", True, Me.cmdCancel)
         Me.txtNgay_ct1.Value = DateType.FromObject(Reg.GetRegistryKey("DFDFrom"))
         Me.txtNgay_ct2.Value = DateType.FromObject(Reg.GetRegistryKey("DFDTo"))
+
+        Dim oMa_vt2 As New vouchersearchlibobj(Me.txtMa_vt2, Me.lblTen_Ma_vt2, modVoucher.sysConn, modVoucher.appConn, "vdmvt_ma_vt2", "ma_vt2", "ten_vt", "ma_vt2", "1=1", True, Me.cmdCancel)
     End Sub
 
     <DebuggerStepThrough()>
@@ -281,6 +287,9 @@ Public Class frmSearch
         Me.lblTen_kh = New System.Windows.Forms.Label()
         Me.tabCode = New System.Windows.Forms.TabPage()
         Me.tabOther = New System.Windows.Forms.TabPage()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtMa_vt2 = New System.Windows.Forms.TextBox()
+        Me.lblTen_Ma_vt2 = New System.Windows.Forms.Label()
         Me.tabFilter.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.SuspendLayout()
@@ -288,9 +297,9 @@ Public Class frmSearch
         'txtSo_ct1
         '
         Me.txtSo_ct1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtSo_ct1.Location = New System.Drawing.Point(173, 9)
+        Me.txtSo_ct1.Location = New System.Drawing.Point(144, 8)
         Me.txtSo_ct1.Name = "txtSo_ct1"
-        Me.txtSo_ct1.Size = New System.Drawing.Size(120, 22)
+        Me.txtSo_ct1.Size = New System.Drawing.Size(100, 20)
         Me.txtSo_ct1.TabIndex = 0
         Me.txtSo_ct1.Tag = "FCML"
         Me.txtSo_ct1.Text = "TXTSO_CT1"
@@ -299,9 +308,9 @@ Public Class frmSearch
         'lblNgay_ct
         '
         Me.lblNgay_ct.AutoSize = True
-        Me.lblNgay_ct.Location = New System.Drawing.Point(18, 36)
+        Me.lblNgay_ct.Location = New System.Drawing.Point(15, 31)
         Me.lblNgay_ct.Name = "lblNgay_ct"
-        Me.lblNgay_ct.Size = New System.Drawing.Size(108, 17)
+        Me.lblNgay_ct.Size = New System.Drawing.Size(84, 13)
         Me.lblNgay_ct.TabIndex = 5
         Me.lblNgay_ct.Tag = "L102"
         Me.lblNgay_ct.Text = "Ngay lap tu/den"
@@ -309,9 +318,9 @@ Public Class frmSearch
         'cmdOk
         '
         Me.cmdOk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.cmdOk.Location = New System.Drawing.Point(0, 368)
+        Me.cmdOk.Location = New System.Drawing.Point(0, 373)
         Me.cmdOk.Name = "cmdOk"
-        Me.cmdOk.Size = New System.Drawing.Size(90, 26)
+        Me.cmdOk.Size = New System.Drawing.Size(75, 22)
         Me.cmdOk.TabIndex = 1
         Me.cmdOk.Tag = "L116"
         Me.cmdOk.Text = "Nhan"
@@ -320,9 +329,9 @@ Public Class frmSearch
         '
         Me.cmdCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.cmdCancel.Location = New System.Drawing.Point(91, 368)
+        Me.cmdCancel.Location = New System.Drawing.Point(76, 373)
         Me.cmdCancel.Name = "cmdCancel"
-        Me.cmdCancel.Size = New System.Drawing.Size(90, 26)
+        Me.cmdCancel.Size = New System.Drawing.Size(75, 22)
         Me.cmdCancel.TabIndex = 2
         Me.cmdCancel.Tag = "L117"
         Me.cmdCancel.Text = "Huy"
@@ -331,18 +340,18 @@ Public Class frmSearch
         '
         Me.grpMaster.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpMaster.Location = New System.Drawing.Point(10, 0)
+        Me.grpMaster.Location = New System.Drawing.Point(8, 0)
         Me.grpMaster.Name = "grpMaster"
-        Me.grpMaster.Size = New System.Drawing.Size(740, 138)
+        Me.grpMaster.Size = New System.Drawing.Size(745, 120)
         Me.grpMaster.TabIndex = 17
         Me.grpMaster.TabStop = False
         '
         'lblSo_ct
         '
         Me.lblSo_ct.AutoSize = True
-        Me.lblSo_ct.Location = New System.Drawing.Point(18, 14)
+        Me.lblSo_ct.Location = New System.Drawing.Point(15, 12)
         Me.lblSo_ct.Name = "lblSo_ct"
-        Me.lblSo_ct.Size = New System.Drawing.Size(128, 17)
+        Me.lblSo_ct.Size = New System.Drawing.Size(99, 13)
         Me.lblSo_ct.TabIndex = 22
         Me.lblSo_ct.Tag = "L101"
         Me.lblSo_ct.Text = "Chung tu tu/den so"
@@ -350,9 +359,9 @@ Public Class frmSearch
         'lblDon_vi
         '
         Me.lblDon_vi.AutoSize = True
-        Me.lblDon_vi.Location = New System.Drawing.Point(311, 377)
+        Me.lblDon_vi.Location = New System.Drawing.Point(259, 327)
         Me.lblDon_vi.Name = "lblDon_vi"
-        Me.lblDon_vi.Size = New System.Drawing.Size(48, 17)
+        Me.lblDon_vi.Size = New System.Drawing.Size(38, 13)
         Me.lblDon_vi.TabIndex = 35
         Me.lblDon_vi.Tag = "L104"
         Me.lblDon_vi.Text = "Don vi"
@@ -361,27 +370,27 @@ Public Class frmSearch
         'lblDien_giai
         '
         Me.lblDien_giai.AutoSize = True
-        Me.lblDien_giai.Location = New System.Drawing.Point(19, 108)
+        Me.lblDien_giai.Location = New System.Drawing.Point(16, 94)
         Me.lblDien_giai.Name = "lblDien_giai"
-        Me.lblDien_giai.Size = New System.Drawing.Size(98, 17)
+        Me.lblDien_giai.Size = New System.Drawing.Size(75, 13)
         Me.lblDien_giai.TabIndex = 45
         Me.lblDien_giai.Tag = "L110"
         Me.lblDien_giai.Text = "Dien giai chua"
         '
         'txtdien_giai
         '
-        Me.txtdien_giai.Location = New System.Drawing.Point(173, 106)
+        Me.txtdien_giai.Location = New System.Drawing.Point(144, 92)
         Me.txtdien_giai.Name = "txtdien_giai"
-        Me.txtdien_giai.Size = New System.Drawing.Size(386, 23)
-        Me.txtdien_giai.TabIndex = 10
+        Me.txtdien_giai.Size = New System.Drawing.Size(322, 20)
+        Me.txtdien_giai.TabIndex = 5
         Me.txtdien_giai.Tag = "FCMaster#dbo.ff_TextContent(a.dien_giai, N'%s') = 1#"
         '
         'txtSo_ct2
         '
         Me.txtSo_ct2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtSo_ct2.Location = New System.Drawing.Point(294, 9)
+        Me.txtSo_ct2.Location = New System.Drawing.Point(245, 8)
         Me.txtSo_ct2.Name = "txtSo_ct2"
-        Me.txtSo_ct2.Size = New System.Drawing.Size(120, 22)
+        Me.txtSo_ct2.Size = New System.Drawing.Size(100, 20)
         Me.txtSo_ct2.TabIndex = 1
         Me.txtSo_ct2.Tag = "FCML"
         Me.txtSo_ct2.Text = "TXTSO_CT2"
@@ -389,10 +398,10 @@ Public Class frmSearch
         '
         'txtNgay_ct1
         '
-        Me.txtNgay_ct1.Location = New System.Drawing.Point(173, 33)
+        Me.txtNgay_ct1.Location = New System.Drawing.Point(144, 29)
         Me.txtNgay_ct1.MaxLength = 10
         Me.txtNgay_ct1.Name = "txtNgay_ct1"
-        Me.txtNgay_ct1.Size = New System.Drawing.Size(120, 22)
+        Me.txtNgay_ct1.Size = New System.Drawing.Size(100, 20)
         Me.txtNgay_ct1.TabIndex = 2
         Me.txtNgay_ct1.Tag = "FD"
         Me.txtNgay_ct1.Text = "  /  /    "
@@ -401,10 +410,10 @@ Public Class frmSearch
         '
         'txtNgay_ct2
         '
-        Me.txtNgay_ct2.Location = New System.Drawing.Point(294, 33)
+        Me.txtNgay_ct2.Location = New System.Drawing.Point(245, 29)
         Me.txtNgay_ct2.MaxLength = 10
         Me.txtNgay_ct2.Name = "txtNgay_ct2"
-        Me.txtNgay_ct2.Size = New System.Drawing.Size(120, 22)
+        Me.txtNgay_ct2.Size = New System.Drawing.Size(100, 20)
         Me.txtNgay_ct2.TabIndex = 3
         Me.txtNgay_ct2.Tag = "FD"
         Me.txtNgay_ct2.Text = "  /  /    "
@@ -414,9 +423,9 @@ Public Class frmSearch
         'txtMa_dvcs
         '
         Me.txtMa_dvcs.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_dvcs.Location = New System.Drawing.Point(461, 374)
+        Me.txtMa_dvcs.Location = New System.Drawing.Point(384, 324)
         Me.txtMa_dvcs.Name = "txtMa_dvcs"
-        Me.txtMa_dvcs.Size = New System.Drawing.Size(120, 22)
+        Me.txtMa_dvcs.Size = New System.Drawing.Size(100, 20)
         Me.txtMa_dvcs.TabIndex = 6
         Me.txtMa_dvcs.Tag = "FCMaster#ma_dvcs like '%s%'#ML"
         Me.txtMa_dvcs.Text = "TXTMA_DVCS"
@@ -425,9 +434,9 @@ Public Class frmSearch
         'txtMa_vv
         '
         Me.txtMa_vv.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_vv.Location = New System.Drawing.Point(179, 403)
+        Me.txtMa_vv.Location = New System.Drawing.Point(149, 349)
         Me.txtMa_vv.Name = "txtMa_vv"
-        Me.txtMa_vv.Size = New System.Drawing.Size(120, 22)
+        Me.txtMa_vv.Size = New System.Drawing.Size(100, 20)
         Me.txtMa_vv.TabIndex = 13
         Me.txtMa_vv.Tag = "FCDetail#ma_vv like '%s%'#ML"
         Me.txtMa_vv.Text = "TXTMA_VV"
@@ -436,9 +445,9 @@ Public Class frmSearch
         'lblMa_vv
         '
         Me.lblMa_vv.AutoSize = True
-        Me.lblMa_vv.Location = New System.Drawing.Point(29, 405)
+        Me.lblMa_vv.Location = New System.Drawing.Point(24, 351)
         Me.lblMa_vv.Name = "lblMa_vv"
-        Me.lblMa_vv.Size = New System.Drawing.Size(75, 17)
+        Me.lblMa_vv.Size = New System.Drawing.Size(60, 13)
         Me.lblMa_vv.TabIndex = 56
         Me.lblMa_vv.Tag = "L109"
         Me.lblMa_vv.Text = "Ma vu viec"
@@ -448,10 +457,10 @@ Public Class frmSearch
         '
         Me.txtLoc_nsd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.txtLoc_nsd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtLoc_nsd.Location = New System.Drawing.Point(173, 275)
+        Me.txtLoc_nsd.Location = New System.Drawing.Point(144, 295)
         Me.txtLoc_nsd.MaxLength = 1
         Me.txtLoc_nsd.Name = "txtLoc_nsd"
-        Me.txtLoc_nsd.Size = New System.Drawing.Size(29, 22)
+        Me.txtLoc_nsd.Size = New System.Drawing.Size(24, 20)
         Me.txtLoc_nsd.TabIndex = 16
         Me.txtLoc_nsd.TabStop = False
         Me.txtLoc_nsd.Tag = "FC"
@@ -461,9 +470,9 @@ Public Class frmSearch
         '
         Me.lblLoc_nsd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblLoc_nsd.AutoSize = True
-        Me.lblLoc_nsd.Location = New System.Drawing.Point(19, 278)
+        Me.lblLoc_nsd.Location = New System.Drawing.Point(16, 298)
         Me.lblLoc_nsd.Name = "lblLoc_nsd"
-        Me.lblLoc_nsd.Size = New System.Drawing.Size(130, 17)
+        Me.lblLoc_nsd.Size = New System.Drawing.Size(101, 13)
         Me.lblLoc_nsd.TabIndex = 64
         Me.lblLoc_nsd.Tag = "L114"
         Me.lblLoc_nsd.Text = "Loc theo NSD (0/1)"
@@ -472,10 +481,10 @@ Public Class frmSearch
         '
         Me.txtStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.txtStatus.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtStatus.Location = New System.Drawing.Point(294, 275)
+        Me.txtStatus.Location = New System.Drawing.Point(245, 295)
         Me.txtStatus.MaxLength = 1
         Me.txtStatus.Name = "txtStatus"
-        Me.txtStatus.Size = New System.Drawing.Size(29, 22)
+        Me.txtStatus.Size = New System.Drawing.Size(24, 20)
         Me.txtStatus.TabIndex = 17
         Me.txtStatus.TabStop = False
         Me.txtStatus.Tag = "FC"
@@ -485,9 +494,9 @@ Public Class frmSearch
         '
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(211, 278)
+        Me.lblStatus.Location = New System.Drawing.Point(176, 298)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(73, 17)
+        Me.lblStatus.Size = New System.Drawing.Size(55, 13)
         Me.lblStatus.TabIndex = 66
         Me.lblStatus.Tag = "L115"
         Me.lblStatus.Text = "Trang thai"
@@ -496,9 +505,9 @@ Public Class frmSearch
         '
         Me.lblStatusMess.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatusMess.AutoSize = True
-        Me.lblStatusMess.Location = New System.Drawing.Point(336, 278)
+        Me.lblStatusMess.Location = New System.Drawing.Point(280, 298)
         Me.lblStatusMess.Name = "lblStatusMess"
-        Me.lblStatusMess.Size = New System.Drawing.Size(264, 17)
+        Me.lblStatusMess.Size = New System.Drawing.Size(199, 13)
         Me.lblStatusMess.TabIndex = 68
         Me.lblStatusMess.Tag = "L119"
         Me.lblStatusMess.Text = "* - Tat ca, 1 - da, 0 - Chua ghi vao so cai"
@@ -507,18 +516,18 @@ Public Class frmSearch
         '
         Me.grdFilterUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grdFilterUser.Location = New System.Drawing.Point(10, 264)
+        Me.grdFilterUser.Location = New System.Drawing.Point(8, 285)
         Me.grdFilterUser.Name = "grdFilterUser"
-        Me.grdFilterUser.Size = New System.Drawing.Size(740, 44)
+        Me.grdFilterUser.Size = New System.Drawing.Size(745, 39)
         Me.grdFilterUser.TabIndex = 70
         Me.grdFilterUser.TabStop = False
         '
         'lblTen_dvcs
         '
         Me.lblTen_dvcs.AutoSize = True
-        Me.lblTen_dvcs.Location = New System.Drawing.Point(590, 377)
+        Me.lblTen_dvcs.Location = New System.Drawing.Point(492, 327)
         Me.lblTen_dvcs.Name = "lblTen_dvcs"
-        Me.lblTen_dvcs.Size = New System.Drawing.Size(113, 17)
+        Me.lblTen_dvcs.Size = New System.Drawing.Size(87, 13)
         Me.lblTen_dvcs.TabIndex = 7
         Me.lblTen_dvcs.Tag = ""
         Me.lblTen_dvcs.Text = "Ten don vi co so"
@@ -527,9 +536,9 @@ Public Class frmSearch
         'lblMa_td1
         '
         Me.lblMa_td1.AutoSize = True
-        Me.lblMa_td1.Location = New System.Drawing.Point(29, 429)
+        Me.lblMa_td1.Location = New System.Drawing.Point(24, 372)
         Me.lblMa_td1.Name = "lblMa_td1"
-        Me.lblMa_td1.Size = New System.Drawing.Size(75, 17)
+        Me.lblMa_td1.Size = New System.Drawing.Size(58, 13)
         Me.lblMa_td1.TabIndex = 58
         Me.lblMa_td1.Tag = "L111"
         Me.lblMa_td1.Text = "Ma tu do 1"
@@ -538,9 +547,9 @@ Public Class frmSearch
         'txtMa_td1
         '
         Me.txtMa_td1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_td1.Location = New System.Drawing.Point(179, 427)
+        Me.txtMa_td1.Location = New System.Drawing.Point(149, 370)
         Me.txtMa_td1.Name = "txtMa_td1"
-        Me.txtMa_td1.Size = New System.Drawing.Size(120, 22)
+        Me.txtMa_td1.Size = New System.Drawing.Size(100, 20)
         Me.txtMa_td1.TabIndex = 0
         Me.txtMa_td1.Tag = "FCDetail#ma_td1 like '%s%'#ML"
         Me.txtMa_td1.Text = "TXTMA_TD1"
@@ -549,9 +558,9 @@ Public Class frmSearch
         'lblTen_td1
         '
         Me.lblTen_td1.AutoSize = True
-        Me.lblTen_td1.Location = New System.Drawing.Point(308, 429)
+        Me.lblTen_td1.Location = New System.Drawing.Point(257, 372)
         Me.lblTen_td1.Name = "lblTen_td1"
-        Me.lblTen_td1.Size = New System.Drawing.Size(81, 17)
+        Me.lblTen_td1.Size = New System.Drawing.Size(62, 13)
         Me.lblTen_td1.TabIndex = 76
         Me.lblTen_td1.Tag = ""
         Me.lblTen_td1.Text = "Ten tu do 1"
@@ -560,9 +569,9 @@ Public Class frmSearch
         'lblMa_td2
         '
         Me.lblMa_td2.AutoSize = True
-        Me.lblMa_td2.Location = New System.Drawing.Point(29, 453)
+        Me.lblMa_td2.Location = New System.Drawing.Point(24, 393)
         Me.lblMa_td2.Name = "lblMa_td2"
-        Me.lblMa_td2.Size = New System.Drawing.Size(75, 17)
+        Me.lblMa_td2.Size = New System.Drawing.Size(58, 13)
         Me.lblMa_td2.TabIndex = 60
         Me.lblMa_td2.Tag = "L112"
         Me.lblMa_td2.Text = "Ma tu do 2"
@@ -571,9 +580,9 @@ Public Class frmSearch
         'txtMa_td2
         '
         Me.txtMa_td2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_td2.Location = New System.Drawing.Point(179, 451)
+        Me.txtMa_td2.Location = New System.Drawing.Point(149, 391)
         Me.txtMa_td2.Name = "txtMa_td2"
-        Me.txtMa_td2.Size = New System.Drawing.Size(120, 22)
+        Me.txtMa_td2.Size = New System.Drawing.Size(100, 20)
         Me.txtMa_td2.TabIndex = 1
         Me.txtMa_td2.Tag = "FCDetail#ma_td2 like '%s%'#ML"
         Me.txtMa_td2.Text = "TXTMA_TD2"
@@ -582,9 +591,9 @@ Public Class frmSearch
         'lblTen_td2
         '
         Me.lblTen_td2.AutoSize = True
-        Me.lblTen_td2.Location = New System.Drawing.Point(308, 453)
+        Me.lblTen_td2.Location = New System.Drawing.Point(257, 393)
         Me.lblTen_td2.Name = "lblTen_td2"
-        Me.lblTen_td2.Size = New System.Drawing.Size(81, 17)
+        Me.lblTen_td2.Size = New System.Drawing.Size(62, 13)
         Me.lblTen_td2.TabIndex = 77
         Me.lblTen_td2.Tag = ""
         Me.lblTen_td2.Text = "Ten tu do 2"
@@ -593,9 +602,9 @@ Public Class frmSearch
         'lblMa_td3
         '
         Me.lblMa_td3.AutoSize = True
-        Me.lblMa_td3.Location = New System.Drawing.Point(29, 478)
+        Me.lblMa_td3.Location = New System.Drawing.Point(24, 414)
         Me.lblMa_td3.Name = "lblMa_td3"
-        Me.lblMa_td3.Size = New System.Drawing.Size(75, 17)
+        Me.lblMa_td3.Size = New System.Drawing.Size(58, 13)
         Me.lblMa_td3.TabIndex = 62
         Me.lblMa_td3.Tag = "L113"
         Me.lblMa_td3.Text = "Ma tu do 3"
@@ -604,9 +613,9 @@ Public Class frmSearch
         'txtMa_td3
         '
         Me.txtMa_td3.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_td3.Location = New System.Drawing.Point(179, 475)
+        Me.txtMa_td3.Location = New System.Drawing.Point(149, 412)
         Me.txtMa_td3.Name = "txtMa_td3"
-        Me.txtMa_td3.Size = New System.Drawing.Size(120, 22)
+        Me.txtMa_td3.Size = New System.Drawing.Size(100, 20)
         Me.txtMa_td3.TabIndex = 2
         Me.txtMa_td3.Tag = "FCDetail#ma_td3 like '%s%'#ML"
         Me.txtMa_td3.Text = "TXTMA_TD3"
@@ -615,9 +624,9 @@ Public Class frmSearch
         'lblTen_td3
         '
         Me.lblTen_td3.AutoSize = True
-        Me.lblTen_td3.Location = New System.Drawing.Point(308, 478)
+        Me.lblTen_td3.Location = New System.Drawing.Point(257, 414)
         Me.lblTen_td3.Name = "lblTen_td3"
-        Me.lblTen_td3.Size = New System.Drawing.Size(81, 17)
+        Me.lblTen_td3.Size = New System.Drawing.Size(62, 13)
         Me.lblTen_td3.TabIndex = 78
         Me.lblTen_td3.Tag = ""
         Me.lblTen_td3.Text = "Ten tu do 3"
@@ -628,18 +637,18 @@ Public Class frmSearch
         Me.grpDetail.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpDetail.Location = New System.Drawing.Point(10, 138)
+        Me.grpDetail.Location = New System.Drawing.Point(8, 120)
         Me.grpDetail.Name = "grpDetail"
-        Me.grpDetail.Size = New System.Drawing.Size(740, 126)
+        Me.grpDetail.Size = New System.Drawing.Size(745, 15)
         Me.grpDetail.TabIndex = 69
         Me.grpDetail.TabStop = False
         '
         'lblMa_kh
         '
         Me.lblMa_kh.AutoSize = True
-        Me.lblMa_kh.Location = New System.Drawing.Point(19, 84)
+        Me.lblMa_kh.Location = New System.Drawing.Point(16, 73)
         Me.lblMa_kh.Name = "lblMa_kh"
-        Me.lblMa_kh.Size = New System.Drawing.Size(69, 17)
+        Me.lblMa_kh.Size = New System.Drawing.Size(55, 13)
         Me.lblMa_kh.TabIndex = 83
         Me.lblMa_kh.Tag = "L105"
         Me.lblMa_kh.Text = "Ma khach"
@@ -647,19 +656,19 @@ Public Class frmSearch
         'txtMa_kh
         '
         Me.txtMa_kh.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_kh.Location = New System.Drawing.Point(173, 82)
+        Me.txtMa_kh.Location = New System.Drawing.Point(144, 71)
         Me.txtMa_kh.Name = "txtMa_kh"
-        Me.txtMa_kh.Size = New System.Drawing.Size(120, 22)
-        Me.txtMa_kh.TabIndex = 7
+        Me.txtMa_kh.Size = New System.Drawing.Size(100, 20)
+        Me.txtMa_kh.TabIndex = 4
         Me.txtMa_kh.Tag = "FCMaster#ma_kh like '%s%'#ML"
         Me.txtMa_kh.Text = "TXTMA_KH"
         '
         'lblTen_vv
         '
         Me.lblTen_vv.AutoSize = True
-        Me.lblTen_vv.Location = New System.Drawing.Point(308, 405)
+        Me.lblTen_vv.Location = New System.Drawing.Point(257, 351)
         Me.lblTen_vv.Name = "lblTen_vv"
-        Me.lblTen_vv.Size = New System.Drawing.Size(81, 17)
+        Me.lblTen_vv.Size = New System.Drawing.Size(64, 13)
         Me.lblTen_vv.TabIndex = 97
         Me.lblTen_vv.Tag = ""
         Me.lblTen_vv.Text = "Ten vu viec"
@@ -673,14 +682,17 @@ Public Class frmSearch
         Me.tabFilter.Controls.Add(Me.tabMain)
         Me.tabFilter.Controls.Add(Me.tabCode)
         Me.tabFilter.Controls.Add(Me.tabOther)
-        Me.tabFilter.Location = New System.Drawing.Point(0, 9)
+        Me.tabFilter.Location = New System.Drawing.Point(0, 8)
         Me.tabFilter.Name = "tabFilter"
         Me.tabFilter.SelectedIndex = 0
-        Me.tabFilter.Size = New System.Drawing.Size(767, 351)
+        Me.tabFilter.Size = New System.Drawing.Size(767, 358)
         Me.tabFilter.TabIndex = 0
         '
         'tabMain
         '
+        Me.tabMain.Controls.Add(Me.lblTen_Ma_vt2)
+        Me.tabMain.Controls.Add(Me.Label1)
+        Me.tabMain.Controls.Add(Me.txtMa_vt2)
         Me.tabMain.Controls.Add(Me.lblMa_lo)
         Me.tabMain.Controls.Add(Me.txtMa_lo)
         Me.tabMain.Controls.Add(Me.lblTen_vt)
@@ -705,18 +717,18 @@ Public Class frmSearch
         Me.tabMain.Controls.Add(Me.txtStatus)
         Me.tabMain.Controls.Add(Me.lblStatusMess)
         Me.tabMain.Controls.Add(Me.grdFilterUser)
-        Me.tabMain.Location = New System.Drawing.Point(4, 25)
+        Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
-        Me.tabMain.Size = New System.Drawing.Size(759, 322)
+        Me.tabMain.Size = New System.Drawing.Size(759, 332)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Dieu kien loc"
         '
         'lblMa_lo
         '
         Me.lblMa_lo.AutoSize = True
-        Me.lblMa_lo.Location = New System.Drawing.Point(19, 224)
+        Me.lblMa_lo.Location = New System.Drawing.Point(16, 194)
         Me.lblMa_lo.Name = "lblMa_lo"
-        Me.lblMa_lo.Size = New System.Drawing.Size(40, 17)
+        Me.lblMa_lo.Size = New System.Drawing.Size(31, 13)
         Me.lblMa_lo.TabIndex = 125
         Me.lblMa_lo.Tag = "L126"
         Me.lblMa_lo.Text = "So lo"
@@ -724,19 +736,19 @@ Public Class frmSearch
         'txtMa_lo
         '
         Me.txtMa_lo.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_lo.Location = New System.Drawing.Point(173, 222)
+        Me.txtMa_lo.Location = New System.Drawing.Point(144, 192)
         Me.txtMa_lo.Name = "txtMa_lo"
-        Me.txtMa_lo.Size = New System.Drawing.Size(120, 22)
-        Me.txtMa_lo.TabIndex = 14
+        Me.txtMa_lo.Size = New System.Drawing.Size(100, 20)
+        Me.txtMa_lo.TabIndex = 7
         Me.txtMa_lo.Tag = "FCDetail#ma_lo like '%s%'#ML"
         Me.txtMa_lo.Text = "TXTMA_LO"
         '
         'lblTen_vt
         '
         Me.lblTen_vt.AutoSize = True
-        Me.lblTen_vt.Location = New System.Drawing.Point(298, 200)
+        Me.lblTen_vt.Location = New System.Drawing.Point(248, 173)
         Me.lblTen_vt.Name = "lblTen_vt"
-        Me.lblTen_vt.Size = New System.Drawing.Size(72, 17)
+        Me.lblTen_vt.Size = New System.Drawing.Size(56, 13)
         Me.lblTen_vt.TabIndex = 118
         Me.lblTen_vt.Tag = ""
         Me.lblTen_vt.Text = "Ten vat tu"
@@ -744,9 +756,9 @@ Public Class frmSearch
         'lblMa_vt
         '
         Me.lblMa_vt.AutoSize = True
-        Me.lblMa_vt.Location = New System.Drawing.Point(19, 200)
+        Me.lblMa_vt.Location = New System.Drawing.Point(16, 173)
         Me.lblMa_vt.Name = "lblMa_vt"
-        Me.lblMa_vt.Size = New System.Drawing.Size(66, 17)
+        Me.lblMa_vt.Size = New System.Drawing.Size(52, 13)
         Me.lblMa_vt.TabIndex = 117
         Me.lblMa_vt.Tag = "L125"
         Me.lblMa_vt.Text = "Ma vat tu"
@@ -754,42 +766,72 @@ Public Class frmSearch
         'txtMa_vt
         '
         Me.txtMa_vt.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_vt.Location = New System.Drawing.Point(173, 197)
+        Me.txtMa_vt.Location = New System.Drawing.Point(144, 171)
         Me.txtMa_vt.Name = "txtMa_vt"
-        Me.txtMa_vt.Size = New System.Drawing.Size(120, 22)
-        Me.txtMa_vt.TabIndex = 13
+        Me.txtMa_vt.Size = New System.Drawing.Size(100, 20)
+        Me.txtMa_vt.TabIndex = 6
         Me.txtMa_vt.Tag = "FCDetail#ma_vt like '%s%'#ML"
         Me.txtMa_vt.Text = "TXTMA_VT"
         '
         'lblTen_kh
         '
         Me.lblTen_kh.AutoSize = True
-        Me.lblTen_kh.Location = New System.Drawing.Point(294, 84)
+        Me.lblTen_kh.Location = New System.Drawing.Point(245, 73)
         Me.lblTen_kh.Name = "lblTen_kh"
-        Me.lblTen_kh.Size = New System.Drawing.Size(111, 17)
+        Me.lblTen_kh.Size = New System.Drawing.Size(86, 13)
         Me.lblTen_kh.TabIndex = 100
         Me.lblTen_kh.Tag = ""
         Me.lblTen_kh.Text = "Ten khach hang"
         '
         'tabCode
         '
-        Me.tabCode.Location = New System.Drawing.Point(4, 25)
+        Me.tabCode.Location = New System.Drawing.Point(4, 22)
         Me.tabCode.Name = "tabCode"
-        Me.tabCode.Size = New System.Drawing.Size(787, 422)
+        Me.tabCode.Size = New System.Drawing.Size(631, 278)
         Me.tabCode.TabIndex = 1
         Me.tabCode.Text = "Ma tu do"
         '
         'tabOther
         '
-        Me.tabOther.Location = New System.Drawing.Point(4, 25)
+        Me.tabOther.Location = New System.Drawing.Point(4, 22)
         Me.tabOther.Name = "tabOther"
-        Me.tabOther.Size = New System.Drawing.Size(722, 304)
+        Me.tabOther.Size = New System.Drawing.Size(631, 278)
         Me.tabOther.TabIndex = 2
         Me.tabOther.Text = "Dieu kien khac"
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(17, 220)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(69, 13)
+        Me.Label1.TabIndex = 127
+        Me.Label1.Tag = ""
+        Me.Label1.Text = "Mã cấp GCN"
+        '
+        'txtMa_vt2
+        '
+        Me.txtMa_vt2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
+        Me.txtMa_vt2.Location = New System.Drawing.Point(145, 218)
+        Me.txtMa_vt2.Name = "txtMa_vt2"
+        Me.txtMa_vt2.Size = New System.Drawing.Size(100, 20)
+        Me.txtMa_vt2.TabIndex = 8
+        Me.txtMa_vt2.Tag = "FC"
+        Me.txtMa_vt2.Text = "TXTMA_VT2"
+        '
+        'lblTen_Ma_vt2
+        '
+        Me.lblTen_Ma_vt2.AutoSize = True
+        Me.lblTen_Ma_vt2.Location = New System.Drawing.Point(251, 221)
+        Me.lblTen_Ma_vt2.Name = "lblTen_Ma_vt2"
+        Me.lblTen_Ma_vt2.Size = New System.Drawing.Size(56, 13)
+        Me.lblTen_Ma_vt2.TabIndex = 128
+        Me.lblTen_Ma_vt2.Tag = ""
+        Me.lblTen_Ma_vt2.Text = "Ten vat tu"
+        '
         'frmSearch
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(767, 402)
         Me.Controls.Add(Me.tabFilter)
         Me.Controls.Add(Me.lblTen_vv)
@@ -865,7 +907,9 @@ Public Class frmSearch
     Friend WithEvents txtSo_ct1 As TextBox
     Friend WithEvents txtSo_ct2 As TextBox
     Friend WithEvents txtStatus As TextBox
-
+    Friend WithEvents Label1 As Label
+    Friend WithEvents txtMa_vt2 As TextBox
+    Friend WithEvents lblTen_Ma_vt2 As Label
     Private components As IContainer
 End Class
 

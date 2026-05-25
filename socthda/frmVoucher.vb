@@ -1526,7 +1526,7 @@ Public Class frmVoucher
         Me.colTk_cpbh = GetColumn(Me.grdDetail, "tk_cpbh")
         Dim obj3 As New VoucherLibObj(Me.colTk_vt, "ten_tk_vt", modVoucher.sysConn, modVoucher.appConn, "dmtk", "tk", "ten_tk", "Account", "loai_tk = 1", modVoucher.tblDetail, Me.pnContent, False, Me.cmdEdit)
         Dim obj2 As New VoucherLibObj(Me.colTk_gv, "ten_tk_gv", modVoucher.sysConn, modVoucher.appConn, "dmtk", "tk", "ten_tk", "Account", "loai_tk = 1", modVoucher.tblDetail, Me.pnContent, False, Me.cmdEdit)
-        Dim obj4 As New VoucherLibObj(Me.colTk_dt, "ten_tk_dt", modVoucher.sysConn, modVoucher.appConn, "dmtk", "tk", "ten_tk", "Account", "loai_tk = 1", modVoucher.tblDetail, Me.pnContent, False, Me.cmdEdit)
+        Dim obj4 As New VoucherLibObj(Me.colTk_dt, "tk_gv", modVoucher.sysConn, modVoucher.appConn, "dmtkdtgv", "tk_dt", "tk_gv", "AcctRevenue", "1 = 1", modVoucher.tblDetail, Me.pnContent, False, Me.cmdEdit)
         Me.oSalAccount = New VoucherLibObj(Me.colTk_cpbh, "ten_tk_cpbh", modVoucher.sysConn, modVoucher.appConn, "dmtk", "tk", "ten_tk", "Account", "loai_tk = 1", modVoucher.tblDetail, Me.pnContent, False, Me.cmdEdit)
         Me.oDiscAccount = New VoucherLibObj(Me.colTk_ck, "ten_tk_ck", modVoucher.sysConn, modVoucher.appConn, "dmtk", "tk", "ten_tk", "Account", "loai_tk = 1", modVoucher.tblDetail, Me.pnContent, True, Me.cmdEdit)
         AddHandler Me.colTk_vt.TextBox.Enter, New EventHandler(AddressOf Me.WhenNoneInputItemAccount)

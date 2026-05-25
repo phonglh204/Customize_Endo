@@ -175,7 +175,7 @@ Public Class frmVoucher
             If (ObjectType.ObjTst(modVoucher.oVar.Item("m_pack_yn"), 0, False) = 0) Then
                 str4 = ((String.Concat(New String() {str4, ChrW(13), "UPDATE ", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), " SET Status = '*'"}) & ", datetime2 = GETDATE(), user_id2 = " & StringType.FromObject(Reg.GetRegistryKey("CurrUserId"))) & "  WHERE " & cKey)
             End If
-            'str4 = "EXEC spUpdateVoucher '" + VoucherCode + "','" + lcIDNumber + "',-1," + Reg.GetRegistryKey("CurrUserID").ToString.Trim + ChrW(13) + str4
+            str4 = "EXEC spUpdateVCFollow '" + VoucherCode + "', '" + Me.cIDNumber + "', 'Del', " + Reg.GetRegistryKey("CurrUserID").ToString.Trim + ",0" + ChrW(13) + str4
             Sql.SQLExecute((modVoucher.appConn), str4)
             Me.pnContent.Text = ""
         End If
@@ -1493,7 +1493,6 @@ Public Class frmVoucher
                     End If
                 End If
 
-                Dim str4 As String = ""
                 Me.pnContent.Text = StringType.FromObject(modVoucher.oVar.Item("m_process"))
 
 
@@ -1511,10 +1510,12 @@ Public Class frmVoucher
                 Me.grdHeader.DataRow = modVoucher.tblMaster.Item(Me.iMasterRow).Row
                 Me.grdHeader.Gather()
                 GatherMemvar(modVoucher.tblMaster.Item(Me.iMasterRow), Me)
+                Dim str4 As String = ""
                 If (StringType.StrCmp(oVoucher.cAction, "New", False) = 0) Then
-                    str4 += ChrW(13) + GenSQLInsert((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), modVoucher.tblMaster.Item(Me.iMasterRow).Row)
+                    str4 = GenSQLInsert((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), modVoucher.tblMaster.Item(Me.iMasterRow).Row)
                 Else
                     Dim cKey As String = StringType.FromObject(ObjectType.AddObj(ObjectType.AddObj("stt_rec = '", modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")), "'"))
+                    str4 = "EXEC spUpdateVCFollow '" + VoucherCode + "', '" + Me.cIDNumber + "', 'Edit', " + Reg.GetRegistryKey("CurrUserID").ToString.Trim + ",0"
                     str4 += ChrW(13) + ((GenSQLUpdate((modVoucher.appConn), Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), modVoucher.tblMaster.Item(Me.iMasterRow).Row, cKey) & ChrW(13) & GenSQLDelete(Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), cKey)))
                 End If
                 cString = "ma_ct, ngay_ct, so_ct, stt_rec"
@@ -1540,14 +1541,15 @@ Public Class frmVoucher
                     End If
                     num += 1
                 Loop
-                oVoucher.IncreaseVoucherNo(Strings.Trim(Me.txtSo_ct.Text))
-                Me.EDTBColumns(False)
                 str4 += ChrW(13) + Me.grdHeader.SQLUpdateFreeField(modVoucher.appConn, Conversions.ToString(modVoucher.tblMaster.Item(Me.iMasterRow).Item("stt_rec")))
+                str4 += ChrW(13) + "EXEC spUpdateVCFollow '" + VoucherCode + "', '" + Me.cIDNumber + "', 'Save', " + Reg.GetRegistryKey("CurrUserID").ToString.Trim + ",1"
                 If Sql.SQLCompressExecute((modVoucher.appConn), str4) Is Nothing Then
                     Msg.Alert("Phiền bạn rồi có lỗi gì đó không lưu được, kiểm tra lại mạng và dữ liệu hoặc gọi bộ phận hỗ trợ phần mềm nhé", 2)
                     oVoucher.isContinue = False
                     Return
                 End If
+                oVoucher.IncreaseVoucherNo(Strings.Trim(Me.txtSo_ct.Text))
+                Me.EDTBColumns(False)
                 Me.pnContent.Text = ""
                 SaveLocalDataView(modVoucher.tblDetail)
                 oVoucher.RefreshStatus(Me.cboStatus)
