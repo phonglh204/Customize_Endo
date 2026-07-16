@@ -36,6 +36,7 @@ Module modVoucher
         Dim index As Integer = 0
         Do
             modVoucher.tbcDetail(index) = New DataGridTextBoxColumn
+            modVoucher.tbcDetail2(index) = New DataGridTextBoxColumn
             index += 1
         Loop While (index < MaxColumns)
         Control.CheckForIllegalCrossThreadCalls = False
@@ -50,6 +51,7 @@ Module modVoucher
 
     ' Fields
     Public alDetail As String
+    Public alDetail2 As String
     Public alMaster As String
     Public appConn As SqlConnection
     Public cIDVoucher As String
@@ -75,10 +77,12 @@ Module modVoucher
     Public sysConn As SqlConnection
     Public Const SysID As String = "DX5Tran"
     Public tbcDetail As DataGridTextBoxColumn() = New DataGridTextBoxColumn(MaxColumns - 1) {}
+    Public tbcDetail2 As DataGridTextBoxColumn() = New DataGridTextBoxColumn(MaxColumns - 1) {}
     Public tblDetail As DataView = New DataView
-    Public tblDetailx As DataView
+    Public tblDetail2 As DataView = New DataView
     Public tblMaster As DataView = New DataView
     Public tbsDetail As DataGridTableStyle = New DataGridTableStyle
+    Public tbsDetail2 As DataGridTableStyle = New DataGridTableStyle
     Public VoucherCode As String
 End Module
 
