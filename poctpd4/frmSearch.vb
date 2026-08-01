@@ -277,6 +277,8 @@ Public Class frmSearch
         Me.lblTen_vv = New System.Windows.Forms.Label()
         Me.tabFilter = New System.Windows.Forms.TabControl()
         Me.tabMain = New System.Windows.Forms.TabPage()
+        Me.cboStatus = New System.Windows.Forms.ComboBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.lblTen_Ma_vt2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtMa_vt2 = New System.Windows.Forms.TextBox()
@@ -288,8 +290,6 @@ Public Class frmSearch
         Me.lblTen_kh = New System.Windows.Forms.Label()
         Me.tabCode = New System.Windows.Forms.TabPage()
         Me.tabOther = New System.Windows.Forms.TabPage()
-        Me.cboStatus = New System.Windows.Forms.ComboBox()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.tabFilter.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.SuspendLayout()
@@ -494,7 +494,7 @@ Public Class frmSearch
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grdFilterUser.Location = New System.Drawing.Point(8, 275)
         Me.grdFilterUser.Name = "grdFilterUser"
-        Me.grdFilterUser.Size = New System.Drawing.Size(745, 14)
+        Me.grdFilterUser.Size = New System.Drawing.Size(745, 54)
         Me.grdFilterUser.TabIndex = 70
         Me.grdFilterUser.TabStop = False
         '
@@ -615,7 +615,7 @@ Public Class frmSearch
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpDetail.Location = New System.Drawing.Point(8, 120)
         Me.grpDetail.Name = "grpDetail"
-        Me.grpDetail.Size = New System.Drawing.Size(745, 15)
+        Me.grpDetail.Size = New System.Drawing.Size(745, 149)
         Me.grpDetail.TabIndex = 69
         Me.grpDetail.TabStop = False
         '
@@ -698,6 +698,27 @@ Public Class frmSearch
         Me.tabMain.Size = New System.Drawing.Size(759, 332)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Dieu kien loc"
+        '
+        'cboStatus
+        '
+        Me.cboStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cboStatus.FormattingEnabled = True
+        Me.cboStatus.Location = New System.Drawing.Point(380, 298)
+        Me.cboStatus.Name = "cboStatus"
+        Me.cboStatus.Size = New System.Drawing.Size(310, 21)
+        Me.cboStatus.TabIndex = 129
+        Me.cboStatus.Tag = ""
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(321, 301)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(55, 13)
+        Me.Label2.TabIndex = 130
+        Me.Label2.Tag = "L115"
+        Me.Label2.Text = "Trang thai"
         '
         'lblTen_Ma_vt2
         '
@@ -804,27 +825,6 @@ Public Class frmSearch
         Me.tabOther.Size = New System.Drawing.Size(759, 332)
         Me.tabOther.TabIndex = 2
         Me.tabOther.Text = "Dieu kien khac"
-        '
-        'cboStatus
-        '
-        Me.cboStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cboStatus.FormattingEnabled = True
-        Me.cboStatus.Location = New System.Drawing.Point(380, 298)
-        Me.cboStatus.Name = "cboStatus"
-        Me.cboStatus.Size = New System.Drawing.Size(310, 21)
-        Me.cboStatus.TabIndex = 129
-        Me.cboStatus.Tag = ""
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(321, 301)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(55, 13)
-        Me.Label2.TabIndex = 130
-        Me.Label2.Tag = "L115"
-        Me.Label2.Text = "Trang thai"
         '
         'frmSearch
         '
