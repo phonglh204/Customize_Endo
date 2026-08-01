@@ -283,6 +283,9 @@ Public Class frmVoucher
         End Try
         Try
             GetColumn(grdDetail, "ma_vt2").TextBox.Enabled = False
+            GetColumn(grdDetail, "so_gcn").TextBox.Enabled = False
+            GetColumn(grdDetail, "ngay_cap_gcn").TextBox.Enabled = False
+            GetColumn(grdDetail, "ngay_hh_gcn").TextBox.Enabled = False
         Catch ex As Exception
         End Try
     End Sub

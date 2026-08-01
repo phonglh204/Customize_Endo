@@ -161,7 +161,15 @@ Public Class frmSearch
             i += 1
         Loop
 
-        Dim tcSql As String = String.Concat(New String() {"EXEC spLoadDX5Tran '", modVoucher.cLan, "', '", modVoucher.cIDVoucher, "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_sl_ct0"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))), "', '", Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))), "', '", modVoucher.VoucherCode, "', ", Strings.Trim(StringType.FromObject(Reg.GetRegistryKey("CurrUserID")))})
+        Dim tcSql As String = "EXEC spLoadDX5Tran '" + modVoucher.cLan + "'"
+        tcSql += ", '" + modVoucher.cIDVoucher + "'"
+        tcSql += ", '" + Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_sl_ct0"))) + "', '" + Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_phdbf"))) + "', '" + Strings.Trim(StringType.FromObject(modVoucher.oVoucherRow.Item("m_ctdbf"))) + "'"
+        tcSql += ", '" + modVoucher.VoucherCode + "'"
+        If txtLoc_nsd.Text = "1" Then
+            tcSql += ", " + Strings.Trim(StringType.FromObject(Reg.GetRegistryKey("CurrUserID")))
+        Else
+            tcSql += ",-1"
+        End If
         tcSql += "," + Sql.ConvertVS2SQLType(strSQLLong, "")
         tcSql += "," + Sql.ConvertVS2SQLType(str, "")
         tcSql += GetLoadParameters()

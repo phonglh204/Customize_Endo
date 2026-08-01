@@ -56,8 +56,11 @@ Public Class frmVoucher
         End If
         Me.EDTBColumns()
         Me.InitFlowHandling(Me.cboAction)
+        Msg.Alert(Me.cboAction.Items.Count)
         Me.EDStatus()
         Me.oSecurity.SetReadOnly()
+        Me.cboAction.SelectedIndex = 0
+        Me.cboAction.Enabled = False
     End Sub
 
     Private Sub AfterUpdateVc(ByVal lcIDNumber As String, ByVal lcAction As String)
@@ -253,6 +256,7 @@ Public Class frmVoucher
             Me.cmdSave.Enabled = False
         End If
         Me.EDTrans()
+        Me.cboAction.Enabled = False
     End Sub
 
     Private Sub EDStatus()
@@ -621,7 +625,7 @@ Public Class frmVoucher
         modVoucher.tblDetail.RowFilter = StringType.FromObject(obj2)
     End Sub
 
-    Public Function InitFlowHandling(ByVal cboHandling As ComboBox) As DataTable
+    Public Function InitFlowHandling(ByRef cboHandling As ComboBox) As DataTable
         Dim ds As New DataSet
         Dim num2 As Integer = 0
         cboHandling.DropDownStyle = ComboBoxStyle.DropDownList
@@ -638,7 +642,8 @@ Public Class frmVoucher
             If (ObjectType.ObjTst(table.Rows.Item(i).Item("status"), Me.txtStatus.Text, False) = 0) Then
                 num2 = i
             End If
-            Dim item As String = StringType.FromObject(ObjectType.AddObj(ObjectType.AddObj(table.Rows.Item(i).Item("action_id"), ". "), Strings.Trim(StringType.FromObject(LateBinding.LateGet(table.Rows.Item(i), Nothing, "Item", New Object() {ObjectType.AddObj("action_name", Interaction.IIf((StringType.StrCmp(str, "V", False) = 0), "", "2"))}, Nothing, Nothing)))))
+            'Msg.Alert(i.ToString + " -----------------" + table.Rows.Item(i).Item("action_name" + Interaction.IIf(str = "V", "", "2")))
+            Dim item As String = table.Rows.Item(i).Item("action_id") + ". " + table.Rows.Item(i).Item("action_name" + Interaction.IIf(str = "V", "", "2"))
             cboHandling.Items.Add(item)
             i += 1
         Loop
@@ -1561,18 +1566,29 @@ Public Class frmVoucher
             Else
                 Dim str As String
                 Dim num2 As Integer
+                Dim hoan_thanh As Boolean = True
                 num3 = (modVoucher.tblDetail.Count - 1)
                 num = num3
                 Do While (num >= 0)
                     If Not Information.IsDBNull(RuntimeHelpers.GetObjectValue(modVoucher.tblDetail.Item(num).Item("ma_vt"))) Then
                         If (StringType.StrCmp(Strings.Trim(StringType.FromObject(modVoucher.tblDetail.Item(num).Item("ma_vt"))), "", False) = 0) Then
                             modVoucher.tblDetail.Item(num).Delete()
+                        ElseIf tblDetail.Item(num).Item("xstatus") = 0 Then
+                            hoan_thanh = False
                         End If
                     Else
                         modVoucher.tblDetail.Item(num).Delete()
                     End If
                     num = (num + -1)
                 Loop
+
+                If hoan_thanh Then
+                    Me.cboStatus.SelectedIndex = 1
+                    Me.cboAction.SelectedIndex = 1
+                Else
+                    Me.cboStatus.SelectedIndex = 0
+                    Me.cboAction.SelectedIndex = 0
+                End If
 
                 num3 = (modVoucher.tblDetail2.Count - 1)
                 num = num3
