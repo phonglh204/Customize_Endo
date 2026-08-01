@@ -43,8 +43,8 @@ Public Class frmSearch
         If (StringType.StrCmp(Me.txtLoc_nsd.Text, "1", False) = 0) Then
             strSQLLong = StringType.FromObject(ObjectType.AddObj(ObjectType.AddObj((strSQLLong & " AND (a.user_id0 = "), Reg.GetRegistryKey("CurrUserID")), ")"))
         End If
-        If (StringType.StrCmp(Me.txtStatus.Text, "*", False) <> 0) Then
-            strSQLLong = (strSQLLong & " AND (a.status = '" & Me.txtStatus.Text & "')")
+        If Not IsDBNull(Me.cboStatus.SelectedValue) Then
+            strSQLLong = (strSQLLong & " AND (a.status = '" & Me.cboStatus.SelectedValue.ToString.Trim & "')")
         End If
         Dim str As String = str2
         Dim num8 As Integer = (Me.Controls.Count - 1)
@@ -259,9 +259,7 @@ Public Class frmSearch
         Me.lblMa_vv = New System.Windows.Forms.Label()
         Me.txtLoc_nsd = New System.Windows.Forms.TextBox()
         Me.lblLoc_nsd = New System.Windows.Forms.Label()
-        Me.txtStatus = New System.Windows.Forms.TextBox()
         Me.lblStatus = New System.Windows.Forms.Label()
-        Me.lblStatusMess = New System.Windows.Forms.Label()
         Me.grdFilterUser = New System.Windows.Forms.GroupBox()
         Me.lblTen_dvcs = New System.Windows.Forms.Label()
         Me.lblMa_td1 = New System.Windows.Forms.Label()
@@ -279,6 +277,9 @@ Public Class frmSearch
         Me.lblTen_vv = New System.Windows.Forms.Label()
         Me.tabFilter = New System.Windows.Forms.TabControl()
         Me.tabMain = New System.Windows.Forms.TabPage()
+        Me.lblTen_Ma_vt2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtMa_vt2 = New System.Windows.Forms.TextBox()
         Me.lblMa_lo = New System.Windows.Forms.Label()
         Me.txtMa_lo = New System.Windows.Forms.TextBox()
         Me.lblTen_vt = New System.Windows.Forms.Label()
@@ -287,9 +288,8 @@ Public Class frmSearch
         Me.lblTen_kh = New System.Windows.Forms.Label()
         Me.tabCode = New System.Windows.Forms.TabPage()
         Me.tabOther = New System.Windows.Forms.TabPage()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.txtMa_vt2 = New System.Windows.Forms.TextBox()
-        Me.lblTen_Ma_vt2 = New System.Windows.Forms.Label()
+        Me.cboStatus = New System.Windows.Forms.ComboBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.tabFilter.SuspendLayout()
         Me.tabMain.SuspendLayout()
         Me.SuspendLayout()
@@ -477,19 +477,6 @@ Public Class frmSearch
         Me.lblLoc_nsd.Tag = "L114"
         Me.lblLoc_nsd.Text = "Loc theo NSD (0/1)"
         '
-        'txtStatus
-        '
-        Me.txtStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtStatus.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtStatus.Location = New System.Drawing.Point(245, 295)
-        Me.txtStatus.MaxLength = 1
-        Me.txtStatus.Name = "txtStatus"
-        Me.txtStatus.Size = New System.Drawing.Size(24, 20)
-        Me.txtStatus.TabIndex = 17
-        Me.txtStatus.TabStop = False
-        Me.txtStatus.Tag = "FC"
-        Me.txtStatus.Text = "TXTSTATUS"
-        '
         'lblStatus
         '
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -501,24 +488,13 @@ Public Class frmSearch
         Me.lblStatus.Tag = "L115"
         Me.lblStatus.Text = "Trang thai"
         '
-        'lblStatusMess
-        '
-        Me.lblStatusMess.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblStatusMess.AutoSize = True
-        Me.lblStatusMess.Location = New System.Drawing.Point(280, 298)
-        Me.lblStatusMess.Name = "lblStatusMess"
-        Me.lblStatusMess.Size = New System.Drawing.Size(199, 13)
-        Me.lblStatusMess.TabIndex = 68
-        Me.lblStatusMess.Tag = "L119"
-        Me.lblStatusMess.Text = "* - Tat ca, 1 - da, 0 - Chua ghi vao so cai"
-        '
         'grdFilterUser
         '
         Me.grdFilterUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grdFilterUser.Location = New System.Drawing.Point(8, 285)
+        Me.grdFilterUser.Location = New System.Drawing.Point(8, 275)
         Me.grdFilterUser.Name = "grdFilterUser"
-        Me.grdFilterUser.Size = New System.Drawing.Size(745, 39)
+        Me.grdFilterUser.Size = New System.Drawing.Size(745, 14)
         Me.grdFilterUser.TabIndex = 70
         Me.grdFilterUser.TabStop = False
         '
@@ -690,6 +666,8 @@ Public Class frmSearch
         '
         'tabMain
         '
+        Me.tabMain.Controls.Add(Me.cboStatus)
+        Me.tabMain.Controls.Add(Me.Label2)
         Me.tabMain.Controls.Add(Me.lblTen_Ma_vt2)
         Me.tabMain.Controls.Add(Me.Label1)
         Me.tabMain.Controls.Add(Me.txtMa_vt2)
@@ -714,14 +692,42 @@ Public Class frmSearch
         Me.tabMain.Controls.Add(Me.lblLoc_nsd)
         Me.tabMain.Controls.Add(Me.txtLoc_nsd)
         Me.tabMain.Controls.Add(Me.lblStatus)
-        Me.tabMain.Controls.Add(Me.txtStatus)
-        Me.tabMain.Controls.Add(Me.lblStatusMess)
         Me.tabMain.Controls.Add(Me.grdFilterUser)
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
         Me.tabMain.Size = New System.Drawing.Size(759, 332)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Dieu kien loc"
+        '
+        'lblTen_Ma_vt2
+        '
+        Me.lblTen_Ma_vt2.AutoSize = True
+        Me.lblTen_Ma_vt2.Location = New System.Drawing.Point(251, 221)
+        Me.lblTen_Ma_vt2.Name = "lblTen_Ma_vt2"
+        Me.lblTen_Ma_vt2.Size = New System.Drawing.Size(56, 13)
+        Me.lblTen_Ma_vt2.TabIndex = 128
+        Me.lblTen_Ma_vt2.Tag = ""
+        Me.lblTen_Ma_vt2.Text = "Ten vat tu"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(17, 220)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(69, 13)
+        Me.Label1.TabIndex = 127
+        Me.Label1.Tag = ""
+        Me.Label1.Text = "Mã cấp GCN"
+        '
+        'txtMa_vt2
+        '
+        Me.txtMa_vt2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
+        Me.txtMa_vt2.Location = New System.Drawing.Point(145, 218)
+        Me.txtMa_vt2.Name = "txtMa_vt2"
+        Me.txtMa_vt2.Size = New System.Drawing.Size(100, 20)
+        Me.txtMa_vt2.TabIndex = 8
+        Me.txtMa_vt2.Tag = "FC"
+        Me.txtMa_vt2.Text = "TXTMA_VT2"
         '
         'lblMa_lo
         '
@@ -787,7 +793,7 @@ Public Class frmSearch
         '
         Me.tabCode.Location = New System.Drawing.Point(4, 22)
         Me.tabCode.Name = "tabCode"
-        Me.tabCode.Size = New System.Drawing.Size(631, 278)
+        Me.tabCode.Size = New System.Drawing.Size(759, 332)
         Me.tabCode.TabIndex = 1
         Me.tabCode.Text = "Ma tu do"
         '
@@ -795,39 +801,30 @@ Public Class frmSearch
         '
         Me.tabOther.Location = New System.Drawing.Point(4, 22)
         Me.tabOther.Name = "tabOther"
-        Me.tabOther.Size = New System.Drawing.Size(631, 278)
+        Me.tabOther.Size = New System.Drawing.Size(759, 332)
         Me.tabOther.TabIndex = 2
         Me.tabOther.Text = "Dieu kien khac"
         '
-        'Label1
+        'cboStatus
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(17, 220)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(69, 13)
-        Me.Label1.TabIndex = 127
-        Me.Label1.Tag = ""
-        Me.Label1.Text = "Mã cấp GCN"
+        Me.cboStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cboStatus.FormattingEnabled = True
+        Me.cboStatus.Location = New System.Drawing.Point(380, 298)
+        Me.cboStatus.Name = "cboStatus"
+        Me.cboStatus.Size = New System.Drawing.Size(310, 21)
+        Me.cboStatus.TabIndex = 129
+        Me.cboStatus.Tag = ""
         '
-        'txtMa_vt2
+        'Label2
         '
-        Me.txtMa_vt2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtMa_vt2.Location = New System.Drawing.Point(145, 218)
-        Me.txtMa_vt2.Name = "txtMa_vt2"
-        Me.txtMa_vt2.Size = New System.Drawing.Size(100, 20)
-        Me.txtMa_vt2.TabIndex = 8
-        Me.txtMa_vt2.Tag = "FC"
-        Me.txtMa_vt2.Text = "TXTMA_VT2"
-        '
-        'lblTen_Ma_vt2
-        '
-        Me.lblTen_Ma_vt2.AutoSize = True
-        Me.lblTen_Ma_vt2.Location = New System.Drawing.Point(251, 221)
-        Me.lblTen_Ma_vt2.Name = "lblTen_Ma_vt2"
-        Me.lblTen_Ma_vt2.Size = New System.Drawing.Size(56, 13)
-        Me.lblTen_Ma_vt2.TabIndex = 128
-        Me.lblTen_Ma_vt2.Tag = ""
-        Me.lblTen_Ma_vt2.Text = "Ten vat tu"
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(321, 301)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(55, 13)
+        Me.Label2.TabIndex = 130
+        Me.Label2.Tag = "L115"
+        Me.Label2.Text = "Trang thai"
         '
         'frmSearch
         '
@@ -880,7 +877,6 @@ Public Class frmSearch
     Friend WithEvents lblNgay_ct As Label
     Friend WithEvents lblSo_ct As Label
     Friend WithEvents lblStatus As Label
-    Friend WithEvents lblStatusMess As Label
     Friend WithEvents lblTen_dvcs As Label
     Friend WithEvents lblTen_kh As Label
     Friend WithEvents lblTen_td1 As Label
@@ -906,10 +902,11 @@ Public Class frmSearch
     Friend WithEvents txtNgay_ct2 As txtDate
     Friend WithEvents txtSo_ct1 As TextBox
     Friend WithEvents txtSo_ct2 As TextBox
-    Friend WithEvents txtStatus As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents txtMa_vt2 As TextBox
     Friend WithEvents lblTen_Ma_vt2 As Label
+    Friend WithEvents cboStatus As ComboBox
+    Friend WithEvents Label2 As Label
     Private components As IContainer
 End Class
 

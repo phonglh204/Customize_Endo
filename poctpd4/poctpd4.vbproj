@@ -93,9 +93,6 @@
     <Reference Include="libscommon">
       <HintPath>..\..\..\..\..\Libs\DEMO4.0\libscommon.dll</HintPath>
     </Reference>
-    <Reference Include="libscontrol">
-      <HintPath>..\..\..\..\..\Libs\DEMO4.0\libscontrol.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic">
       <Name>Microsoft.VisualBasic</Name>
     </Reference>
@@ -159,6 +156,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Source_Standard\libscontrol\libscontrol.vbproj">
+      <Project>{33fcc781-238d-47cd-9294-6c873f308253}</Project>
+      <Name>libscontrol</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
