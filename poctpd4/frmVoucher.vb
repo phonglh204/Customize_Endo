@@ -2139,7 +2139,9 @@ Public Class frmVoucher
                         frmAdd.Controls.Add(button3)
                         xBoolColumn.AddEvent(DirectCast(gridformtran2.TableStyles.Item(0).GridColumnStyles.Item(0), DataGridBoolColumn), New xBoolColumn.BoolValueChangedEventHandler(AddressOf HandleBoolChanges), 18, 0, 0)
                         gridSeachDetail = gridformtran
-                        xBoolColumn.AddEvent(DirectCast(gridformtran.TableStyles.Item(0).GridColumnStyles.Item(0), DataGridBoolColumn), New xBoolColumn.BoolValueChangedEventHandler(AddressOf HandleBoolChanges_Detail), 8, 0, 0)
+                        Dim strFieldsDetail As String = Sql.GetValue(sysConn, "grid", "fields", "code='PKDetail4PD4'").ToString.Trim
+                        Dim fCount As Integer = strFieldsDetail.Split(",").Length - 1
+                        xBoolColumn.AddEvent(DirectCast(gridformtran.TableStyles.Item(0).GridColumnStyles.Item(0), DataGridBoolColumn), New xBoolColumn.BoolValueChangedEventHandler(AddressOf HandleBoolChanges_Detail), fCount, 0, 0)
                         frmAdd.ShowDialog()
                         If button4.Checked Then
                             ds = Nothing

@@ -318,7 +318,7 @@ Public Class frmSearch
         'cmdOk
         '
         Me.cmdOk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.cmdOk.Location = New System.Drawing.Point(0, 373)
+        Me.cmdOk.Location = New System.Drawing.Point(0, 341)
         Me.cmdOk.Name = "cmdOk"
         Me.cmdOk.Size = New System.Drawing.Size(75, 22)
         Me.cmdOk.TabIndex = 1
@@ -329,7 +329,7 @@ Public Class frmSearch
         '
         Me.cmdCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.cmdCancel.Location = New System.Drawing.Point(76, 373)
+        Me.cmdCancel.Location = New System.Drawing.Point(76, 341)
         Me.cmdCancel.Name = "cmdCancel"
         Me.cmdCancel.Size = New System.Drawing.Size(75, 22)
         Me.cmdCancel.TabIndex = 2
@@ -457,7 +457,7 @@ Public Class frmSearch
         '
         Me.txtLoc_nsd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.txtLoc_nsd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtLoc_nsd.Location = New System.Drawing.Point(144, 295)
+        Me.txtLoc_nsd.Location = New System.Drawing.Point(144, 263)
         Me.txtLoc_nsd.MaxLength = 1
         Me.txtLoc_nsd.Name = "txtLoc_nsd"
         Me.txtLoc_nsd.Size = New System.Drawing.Size(24, 20)
@@ -470,7 +470,7 @@ Public Class frmSearch
         '
         Me.lblLoc_nsd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblLoc_nsd.AutoSize = True
-        Me.lblLoc_nsd.Location = New System.Drawing.Point(16, 298)
+        Me.lblLoc_nsd.Location = New System.Drawing.Point(16, 266)
         Me.lblLoc_nsd.Name = "lblLoc_nsd"
         Me.lblLoc_nsd.Size = New System.Drawing.Size(101, 13)
         Me.lblLoc_nsd.TabIndex = 64
@@ -481,7 +481,7 @@ Public Class frmSearch
         '
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(176, 298)
+        Me.lblStatus.Location = New System.Drawing.Point(176, 266)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(55, 13)
         Me.lblStatus.TabIndex = 66
@@ -492,7 +492,7 @@ Public Class frmSearch
         '
         Me.grdFilterUser.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grdFilterUser.Location = New System.Drawing.Point(8, 275)
+        Me.grdFilterUser.Location = New System.Drawing.Point(8, 243)
         Me.grdFilterUser.Name = "grdFilterUser"
         Me.grdFilterUser.Size = New System.Drawing.Size(745, 54)
         Me.grdFilterUser.TabIndex = 70
@@ -615,7 +615,7 @@ Public Class frmSearch
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grpDetail.Location = New System.Drawing.Point(8, 120)
         Me.grpDetail.Name = "grpDetail"
-        Me.grpDetail.Size = New System.Drawing.Size(745, 149)
+        Me.grpDetail.Size = New System.Drawing.Size(745, 117)
         Me.grpDetail.TabIndex = 69
         Me.grpDetail.TabStop = False
         '
@@ -661,7 +661,7 @@ Public Class frmSearch
         Me.tabFilter.Location = New System.Drawing.Point(0, 8)
         Me.tabFilter.Name = "tabFilter"
         Me.tabFilter.SelectedIndex = 0
-        Me.tabFilter.Size = New System.Drawing.Size(767, 358)
+        Me.tabFilter.Size = New System.Drawing.Size(767, 326)
         Me.tabFilter.TabIndex = 0
         '
         'tabMain
@@ -695,7 +695,7 @@ Public Class frmSearch
         Me.tabMain.Controls.Add(Me.grdFilterUser)
         Me.tabMain.Location = New System.Drawing.Point(4, 22)
         Me.tabMain.Name = "tabMain"
-        Me.tabMain.Size = New System.Drawing.Size(759, 332)
+        Me.tabMain.Size = New System.Drawing.Size(759, 300)
         Me.tabMain.TabIndex = 0
         Me.tabMain.Text = "Dieu kien loc"
         '
@@ -829,7 +829,7 @@ Public Class frmSearch
         'frmSearch
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(767, 402)
+        Me.ClientSize = New System.Drawing.Size(767, 370)
         Me.Controls.Add(Me.tabFilter)
         Me.Controls.Add(Me.lblTen_vv)
         Me.Controls.Add(Me.lblTen_dvcs)
